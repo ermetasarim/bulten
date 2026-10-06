@@ -759,12 +759,12 @@ const PAGE_SIZE = 5;
 const PER_CAT = 20;
 const ORDER = ["mersin", "malatya", "fenerbahce", "yesilyurt", "yeniparti", "chp"];
 const FEEDS = [
-  { cat: "mersin", tag: "MERSİN", q: "Mersin" },
-  { cat: "malatya", tag: "MALATYA", q: "Malatya -Yeşilyurtspor" },
-  { cat: "fenerbahce", tag: "FENERBAHÇE", q: "Fenerbahçe" },
-  { cat: "yesilyurt", tag: "YEŞİLYURT", q: "\"Malatya Yeşilyurtspor\" OR Yeşilyurtspor" },
-  { cat: "yeniparti", tag: "YENİ PARTİ", q: "\"Yeni Parti\" Özgür" },
-  { cat: "chp", tag: "CHP", q: "CHP Kılıçdaroğlu" }
+  { cat: "mersin", tag: "MERSİN", url: "https://www.aa.com.tr/tr/rss/default?cat=guncel", q: "Mersin" },
+  { cat: "malatya", tag: "MALATYA", url: "https://www.aa.com.tr/tr/rss/default?cat=guncel", q: "Malatya" },
+  { cat: "fenerbahce", tag: "FENERBAHÇE", url: "https://www.aa.com.tr/tr/rss/default?cat=spor", q: "Fenerbahçe" },
+  { cat: "yesilyurt", tag: "YEŞİLYURT", url: "https://www.aa.com.tr/tr/rss/default?cat=spor", q: "Yeşilyurt" },
+  { cat: "yeniparti", tag: "YENİ PARTİ", url: "https://www.aa.com.tr/tr/rss/default?cat=politika", q: "Özel" },
+  { cat: "chp", tag: "CHP", url: "https://www.aa.com.tr/tr/rss/default?cat=politika", q: "CHP" }
 ];
 
 function rank(s) {
@@ -895,29 +895,28 @@ async function pullFeeds() {
   const status = document.getElementById("updated");
   let added = 0;
   for (const feed of FEEDS) {
-    const rss = "https://news.google.com/rss/search?q=" + encodeURIComponent(feed.q + " when:1d") + "&hl=tr&gl=TR&ceid=TR:tr";
+    const rss = feed.url + (feed.url.includes("?") ? "" : "");
     try {
       const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(rss));
       if (!res.ok) continue;
       const data = await res.json();
-      (data.items || []).slice(0, 8).forEach(item => {
+      (data.items || []).filter(item => !feed.q || (item.title + " " + (item.description || "")).toLocaleLowerCase("tr").includes(feed.q.toLocaleLowerCase("tr"))).slice(0, 8).forEach(item => {
         const title = strip(item.title).replace(/ - .+$/, "");
+        const full = strip(item.content || item.description || "");
         if (!title || known(title)) return;
         stories.push({
           id: "live-" + Math.random().toString(36).slice(2, 9),
           cat: feed.cat,
           tag: feed.tag,
           title,
-          dek: strip(item.description) || "Ajans akışından düşen yeni başlık",
-          meta: (item.author || "Ajans") + " · " + new Date(item.pubDate || Date.now()).toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" }),
-          lead: strip(item.description) || title,
-          body: [
-            strip(item.description) || "Bu başlık ajans akışından geldi. Tam metin kaynakta."
-          ],
+          dek: full || title,
+          meta: "AA · " + new Date(item.pubDate || Date.now()).toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" }),
+          lead: full || title,
+          body: full ? full.split(/\n+/).filter(Boolean) : [title],
           live: 1,
           added: Date.now(),
-          source: item.author || "Ajans",
-          sourceUrl: item.link || ""
+          source: "Anadolu Ajansı",
+          sourceUrl: item.link || "https://www.aa.com.tr"
         });
         added += 1;
       });
