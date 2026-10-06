@@ -321,7 +321,23 @@
   }
   .related button:hover { color: var(--red); }
 
-  .list-wrap.hidden { display: none; }
+  .pager {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 22px 36px 8px;
+  }
+  .pager button {
+    min-width: 40px;
+    height: 40px;
+    border: 1px solid #111;
+    background: transparent;
+    color: #111;
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .pager button.active { background: var(--red); color: #fff; border-color: var(--red); }
+  .pager button:disabled { opacity: .35; }
 
   footer.foot {
     background: var(--black);
@@ -485,6 +501,7 @@
 
   <main>
     <div class="list-wrap" id="list"></div>
+    <div class="pager" id="pager"></div>
     <div class="empty" id="empty">Bu başlıkta kayıt yok.</div>
     <article class="article" id="article"></article>
   </main>
@@ -701,6 +718,9 @@ const articleEl = document.getElementById("article");
 const titleEl = document.getElementById("pageTitle");
 const emptyEl = document.getElementById("empty");
 let filter = "all";
+let page = 1;
+const PAGE_SIZE = 5;
+const PER_CAT = 20;
 const ORDER = ["mersin", "malatya", "fenerbahce", "yesilyurt", "yeniparti", "chp"];
 const FEEDS = [
   { cat: "mersin", tag: "MERSİN", q: "Mersin" },
@@ -719,15 +739,29 @@ function sortStories(list) {
   return list.slice().sort((a, b) => rank(a) - rank(b) || (b.live - a.live) || (b.added || 0) - (a.added || 0));
 }
 
+function capStories() {
+  const next = [];
+  ORDER.forEach(cat => {
+    next.push(...sortStories(stories.filter(s => s.cat === cat)).slice(0, PER_CAT));
+  });
+  stories.length = 0;
+  stories.push(...next);
+}
 function renderList() {
   articleEl.classList.remove("show");
   articleEl.innerHTML = "";
   listEl.classList.remove("hidden");
+  capStories();
   const data = sortStories(stories.filter(s => filter === "all" || s.cat === filter || (filter === "malatya" && s.cat === "yesilyurt")));
+  const pages = Math.max(1, Math.ceil(data.length / PAGE_SIZE));
+  if (page > pages) page = pages;
+  if (page < 1) page = 1;
+  const start = (page - 1) * PAGE_SIZE;
+  const slice = data.slice(start, start + PAGE_SIZE);
   emptyEl.style.display = data.length ? "none" : "block";
-  listEl.innerHTML = data.map((s, i) => `
+  listEl.innerHTML = slice.map((s, i) => `
     <article class="item" data-id="${s.id}">
-      <div class="num">${String(i + 1).padStart(2, "0")}</div>
+      <div class="num">${String(start + i + 1).padStart(2, "0")}</div>
       <div>
         <span class="tag">${s.tag}</span>
         <h2>${s.title}</h2>
@@ -736,6 +770,13 @@ function renderList() {
       </div>
     </article>
   `).join("");
+  const pager = document.getElementById("pager");
+  pager.style.display = data.length > PAGE_SIZE ? "flex" : "none";
+  pager.innerHTML = data.length > PAGE_SIZE ? `
+    <button data-page="${page - 1}" ${page === 1 ? "disabled" : ""}>‹</button>
+    ${Array.from({ length: pages }, (_, i) => `<button data-page="${i + 1}" class="${i + 1 === page ? "active" : ""}">${i + 1}</button>`).join("")}
+    <button data-page="${page + 1}" ${page === pages ? "disabled" : ""}>›</button>
+  ` : "";
   titleEl.textContent = filter === "all" ? "BÜLTEN" : ({
     mersin: "MERSİN",
     malatya: "MALATYA",
@@ -750,6 +791,7 @@ function openStory(id) {
   const s = stories.find(x => x.id === id);
   if (!s) return;
   listEl.classList.add("hidden");
+  document.getElementById("pager").style.display = "none";
   emptyEl.style.display = "none";
   const related = stories.filter(x => x.id !== id && (x.cat === s.cat || (s.cat === "yesilyurt" && x.cat === "malatya") || (s.cat === "malatya" && x.cat === "yesilyurt") || filter === "all")).slice(0, 3);
   articleEl.innerHTML = `
@@ -777,7 +819,16 @@ document.getElementById("nav").addEventListener("click", e => {
   const btn = e.target.closest("button");
   if (!btn) return;
   filter = btn.dataset.filter;
+  page = 1;
   document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("active", b === btn));
+  renderList();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+document.getElementById("pager").addEventListener("click", e => {
+  const btn = e.target.closest("button");
+  if (!btn || btn.disabled) return;
+  page = Number(btn.dataset.page);
   renderList();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
@@ -834,7 +885,7 @@ async function pullFeeds() {
       const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(rss));
       if (!res.ok) continue;
       const data = await res.json();
-      (data.items || []).slice(0, 3).forEach(item => {
+      (data.items || []).slice(0, 8).forEach(item => {
         const title = strip(item.title).replace(/ - .+$/, "");
         if (!title || known(title)) return;
         stories.push({
