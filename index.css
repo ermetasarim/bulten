@@ -550,18 +550,26 @@
   }
 
   @media (max-width: 640px) {
+    html, body { overflow-x: hidden; }
     html, body, .sheet {
       scrollbar-width: none;
       overscroll-behavior-y: contain;
     }
-    .weather { grid-template-columns: 1fr; padding-left: 12px; padding-right: 12px; }
-    .item { grid-template-columns: 46px minmax(0, 1fr); padding-top: 16px; }
-    .item h2 { font-size: 18px; }
-    .mast h1 { font-size: 64px; }
-    .brand-logo { font-size: 18px; }
-    .date-badge b { font-size: 34px; }
-    .edition { letter-spacing: .08em; font-size: 10px; }
+    .sheet { max-width: 100%; overflow-x: hidden; }
+    .brand-logo img, .stamp { width: 168px; max-width: 58vw; }
+    .mast { padding: 14px 12px 12px; }
+    .ticker { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 10px 12px; }
+    .ticker .fx strong { font-size: 14px; overflow: hidden; text-overflow: ellipsis; }
+    .weather { grid-template-columns: 1fr; padding-left: 0; padding-right: 0; }
+    .wcard { grid-template-columns: 88px minmax(0, 1fr); }
+    .item { grid-template-columns: 40px minmax(0, 1fr); padding: 16px 12px; }
+    .item h2 { font-size: 17px; }
+    .mast h1 { font-size: 40px; }
+    .date-badge b { font-size: 30px; }
+    .edition { letter-spacing: .06em; font-size: 10px; }
     .foot-grid, .foot-bar { display: flex; flex-direction: column; align-items: flex-start; }
+    article#story, .article { padding: 20px 14px 40px; }
+    article#story h1, article#story p, .byline { overflow-wrap: anywhere; }
   }
 
   article#story { padding: 28px 28px 64px; }
