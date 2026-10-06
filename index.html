@@ -257,7 +257,8 @@
     display: none;
     padding: 28px 36px 50px;
   }
-  .article.show { display: block; }
+  .article.show { display: block; max-width: none; }
+  .article p, .article .lead { font-size: 18.5px; line-height: 1.7; }
   .back {
     background: none;
     border: 0;
@@ -825,8 +826,30 @@ function renderList() {
 function openStory(id) {
   const s = stories.find(x => x.id === id);
   if (!s) return;
-  try { localStorage.setItem("bulten-all", JSON.stringify(stories)); } catch (err) {}
-  location.href = "haber.html?id=" + encodeURIComponent(id);
+  listEl.classList.add("hidden");
+  document.getElementById("pager").style.display = "none";
+  emptyEl.style.display = "none";
+  const related = stories.filter(x => x.id !== id && x.cat === s.cat).slice(0, 3);
+  const paras = (s.body && s.body.length ? s.body : [s.lead || s.dek || ""]).map(p => `<p>${p}</p>`).join("");
+  articleEl.innerHTML = `
+    <button class="back" id="backBtn">← Anasayfaya dön</button>
+    <span class="tag">${s.tag || ""}</span>
+    <h2>${s.title}</h2>
+    <div class="byline">${s.meta || ""} · Pars Studio masası</div>
+    ${paras}
+    ${s.sourceUrl ? `<a class="source-link" href="${s.sourceUrl}" target="_blank" rel="noopener">Kaynak: ${s.source || "Haberi kaynakta aç"}</a>` : ""}
+    <div class="related">
+      <div class="meta" style="margin-bottom:8px">İlgili başlıklar</div>
+      ${related.map(r => `<button data-id="${r.id}">${r.title}</button>`).join("")}
+    </div>
+  `;
+  articleEl.classList.add("show");
+  titleEl.textContent = "HABER";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  document.getElementById("backBtn").onclick = () => { renderList(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  articleEl.querySelectorAll(".related button").forEach(btn => {
+    btn.onclick = () => openStory(btn.dataset.id);
+  });
 }
 
 document.getElementById("nav").addEventListener("click", e => {
