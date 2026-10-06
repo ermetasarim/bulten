@@ -55,7 +55,9 @@ if (!s) {
 } else {
   document.title = s.title + " · Bülten";
   const related = stories.filter(x => x.id !== s.id && x.cat === s.cat).slice(0, 4);
-  const paras = (s.body && s.body.length ? s.body : [s.lead || s.dek || s.title]).map(p => `<p>${p}</p>`).join("");
+  const paras = (s.body && s.body.length ? s.body : [s.lead || s.dek || s.title])
+    .filter(p => p && !/news\.google\.com|Kaynak bağlantısı|canlı akışından geldi/i.test(p))
+    .map(p => `<p>${p}</p>`).join("");
   box.innerHTML = `
     <a class="back" href="index.html">← Anasayfaya dön</a><span class="tag">${s.tag || ""}</span>
     <h1>${s.title}</h1>
@@ -63,7 +65,7 @@ if (!s) {
     <p class="lead">${s.lead || ""}</p>
     ${paras}
     ${s.sourceUrl ? `<a class="source" href="${s.sourceUrl}" target="_blank" rel="noopener">Kaynak: ${s.source || "Haberi kaynakta aç"}</a>` : ""}
-    <p class="note">Tam metnin hakları kaynak yayındadır. Bu sayfa başlığı ve masanın özetini gösterir; haberin tamamı kaynak linkindedir.</p>
+    <p class="note">Tam metin kaynak yayındadır. Bu sayfa başlığı ve ajansın verdiği metni gösterir; yazının tamamı alttaki kaynaktadır.</p>
     <div class="related">${related.map(r => `<a href="haber.html?id=${encodeURIComponent(r.id)}">${r.title}</a>`).join("")}</div>
   `;
 }
