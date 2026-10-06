@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PARSHABER - 06/10/2026</title>
+<title>PARSHABER - 06 Ekim 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Faculty+Glyphic&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
@@ -1013,8 +1013,7 @@ function tick() {
   const label = document.getElementById("dayLabel");
   if (day) day.textContent = pick("day");
   if (label) label.textContent = (pick("month") + " " + pick("year")).toLocaleUpperCase("tr");
-  const numeric = new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", day: "2-digit", month: "2-digit", year: "numeric" }).format(now);
-  document.title = "PARSHABER - " + numeric.replaceAll(".", "/");
+  document.title = "PARSHABER - " + pick("day") + " " + pick("month") + " " + pick("year");
 }
 tick();
 setInterval(tick, 1000);
