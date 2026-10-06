@@ -320,6 +320,17 @@
     font-size: 15px;
   }
   .related button:hover { color: var(--red); }
+  .source-link {
+    display: inline-block;
+    margin-top: 22px;
+    color: var(--red);
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: .02em;
+    border-bottom: 2px solid var(--red);
+    padding-bottom: 2px;
+  }
+
 
   .pager {
     display: flex;
@@ -533,6 +544,8 @@
 const stories = [
   {
     id: "mersin-tutuklama",
+    source: "BirGün",
+    sourceUrl: "https://www.birgun.net/haber/mersinde-belediyelere-operasyon-vahap-secer-ve-2-belediye-baskani-dahil-34-tutuklama-738798",
     cat: "mersin",
     tag: "YARGI",
     title: "Mersin soruşturması: Vahap Seçer ve 2 ilçe başkanı tutuklandı",
@@ -548,6 +561,8 @@ const stories = [
   },
   {
     id: "fb-ayari",
+    source: "Aspor",
+    sourceUrl: "https://www.aspor.com.tr/fenerbahce/2026/10/06/fenerbahceden-premier-lig-cikarmasi-iki-yildiz-icin-harekete-gecildi",
     cat: "fenerbahce",
     tag: "FENERBAHÇE",
     title: "Fenerbahçe’den Premier Lig çıkarması: Ayari ve Alcaraz masada",
@@ -563,6 +578,8 @@ const stories = [
   },
   {
     id: "yesilyurt-9-1",
+    source: "Bu Sabah Malatya",
+    sourceUrl: "https://www.busabahmalatya.com/tarihi-skor-sehri-sevince-bogdu-yesilyurt-spordan-9-1lik-govde-gosterisi",
     cat: "yesilyurt",
     tag: "SPOR",
     title: "Yeşilyurtspor’dan 9-1: 5’te 5, grup lideri",
@@ -578,6 +595,8 @@ const stories = [
   },
   {
     id: "yeni-parti-uye",
+    source: "Haberler",
+    sourceUrl: "https://www.haberler.com/politika/ozgur-ozel-yeni-parti-nin-uye-sayisinin-753-bine-20302708-haberi/",
     cat: "yeniparti",
     tag: "SİYASET",
     title: "Özel: YENİ Parti 753 bin üyeye ulaştı, il seçimleri 18 Ekim’de",
@@ -593,6 +612,8 @@ const stories = [
   },
   {
     id: "chp-grup",
+    source: "Habertürk",
+    sourceUrl: "https://www.haberturk.com/gundem/son-dakika-haberler-chp-genel-baskani-kemal-kilicdaroglu-partisinin-grup-toplantisinda-konusuyor-3917603",
     cat: "chp",
     tag: "SİYASET",
     title: "Kılıçdaroğlu grupta: “Hiç kimse yargılanamaz değildir”",
@@ -608,6 +629,8 @@ const stories = [
   },
   {
     id: "fb-greenwood",
+    source: "CNN Türk",
+    sourceUrl: "https://www.cnnturk.com/spor/futbol/ismail-kartaldan-greenwooda-sinirlerine-hakim-ol-3475414",
     cat: "fenerbahce",
     tag: "FENERBAHÇE",
     title: "Kartal’dan Greenwood’a uyarı: “Sinirlerine hakim ol”",
@@ -623,6 +646,8 @@ const stories = [
   },
   {
     id: "yesilyurt-bitlis",
+    source: "Bu Sabah Malatya",
+    sourceUrl: "https://www.busabahmalatya.com/tarihi-skor-sehri-sevince-bogdu-yesilyurt-spordan-9-1lik-govde-gosterisi",
     cat: "yesilyurt",
     tag: "SPOR",
     title: "Yeşilyurtspor’da sıradaki sınav: Bitlis deplasmanı",
@@ -638,6 +663,8 @@ const stories = [
   },
   {
     id: "chp-cizre",
+    source: "Haberler",
+    sourceUrl: "https://www.haberler.com/guncel/chp-lideri-kilicdaroglu-10-ekim-de-cizre-de-20301416-haberi/",
     cat: "chp",
     tag: "GÜNDEM",
     title: "Kılıçdaroğlu 10 Ekim’de Cizre’de yeryüzü sofrasında",
@@ -653,6 +680,8 @@ const stories = [
   },
   {
     id: "mersin-yp",
+    source: "TV5",
+    sourceUrl: "https://www.tv5.com.tr/mersindeki-yolsuzluk-sorusturmasinda-vahap-secer-ve-2-belediye-baskani-tutuklandi",
     cat: "mersin",
     tag: "MERSİN",
     title: "Mezitli dosyasında Yeni Parti il binası iddiası",
@@ -668,6 +697,8 @@ const stories = [
   },
   {
     id: "malatya-yagis",
+    source: "Malatya Yeni Ses",
+    sourceUrl: "https://malatyayenises.com/malatya-ve-elazigda-sel-ve-dolu-riskine-dikkat",
     cat: "malatya",
     tag: "MALATYA",
     title: "Malatya’nın güneyine sel ve dolu uyarısı",
@@ -683,6 +714,8 @@ const stories = [
   },
   {
     id: "malatya-insaat",
+    source: "Haberler",
+    sourceUrl: "https://www.haberler.com/guncel/depremin-yaralarini-saran-malatya-da-gelecegin-20302206-haberi/",
     cat: "malatya",
     tag: "MALATYA",
     title: "Sami Er: Kentte yapılaşmanın yüzde 95’i tamam",
@@ -698,6 +731,8 @@ const stories = [
   },
   {
     id: "malatya-carsi",
+    source: "Türkiye Gazetesi",
+    sourceUrl: "https://www.turkiyegazetesi.com.tr/gundem/sehir-ayaga-kalkti-ve-sahlandi-malatyayi-yeniden-insa-ettik-1820836",
     cat: "malatya",
     tag: "KENT",
     title: "Tek çarşıdan çok merkeze: Malatya’nın yeni omurgası",
@@ -805,6 +840,7 @@ function openStory(id) {
       <div class="meta" style="margin-bottom:8px">İlgili başlıklar</div>
       ${related.map(r => `<button data-id="${r.id}">${r.title}</button>`).join("")}
     </div>
+    ${s.sourceUrl ? `<a class="source-link" href="${s.sourceUrl}" target="_blank" rel="noopener">Kaynak: ${s.source || "Haberi aç"}</a>` : ""}
   `;
   articleEl.classList.add("show");
   titleEl.textContent = "HABER";
@@ -902,7 +938,9 @@ async function pullFeeds() {
             "Bu kayıt Pars Studio canlı akışından geldi. Masa haberlerinin yerine geçmez; teyit için kaynak satırına bakın."
           ],
           live: 1,
-          added: Date.now()
+          added: Date.now(),
+          source: item.author || "Ajans",
+          sourceUrl: item.link || ""
         });
         added += 1;
       });
