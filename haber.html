@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Haber · Bülten</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#111; --red:#d0121a; --cream:#f4efe6; --muted:#8b847a; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:#1a1a1a; color:var(--ink); font-family:Inter,system-ui,sans-serif; scrollbar-width:none; }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { display:none; }
+  .sheet { max-width:980px; margin:0 auto; background:var(--cream); min-height:100vh; }
+  header { background:#0c0c0c; color:#fff; padding:18px 28px; display:flex; justify-content:space-between; align-items:flex-end; }
+  header a { color:#fff; text-decoration:none; font-family:"Bebas Neue",sans-serif; font-size:42px; letter-spacing:.04em; line-height:.8; }
+  header span { color:#aaa; font-size:12px; letter-spacing:.14em; font-weight:700; }
+  article { padding:28px 28px 64px; }
+  .back { color:var(--red); font-weight:800; letter-spacing:.08em; font-size:12px; text-decoration:none; }
+  .tag { display:inline-block; background:#111; color:#fff; font-size:10px; font-weight:800; letter-spacing:.12em; padding:3px 6px; margin-left:8px; }
+  h1 { font-size:clamp(32px,5vw,52px); line-height:1.08; letter-spacing:-.03em; margin:14px 0 10px; }
+  .byline { color:var(--muted); font-size:14px; font-weight:600; margin-bottom:18px; }
+  .lead, p { font-size:19px; line-height:1.7; margin:0 0 16px; }
+  .lead { font-weight:650; }
+  .source {
+    display:block;
+    margin-top:28px;
+    padding-top:16px;
+    border-top:1px solid #ddd4c6;
+    color:var(--red);
+    font-weight:800;
+    font-size:16px;
+  }
+  .note { color:#8a837a; font-size:13px; line-height:1.5; margin-top:10px; }
+  .related { margin-top:28px; border-top:1px solid #ddd4c6; padding-top:12px; }
+  .related a { display:block; padding:12px 0; border-bottom:1px dashed #d9d1c4; color:#111; font-weight:700; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <a href="index.html">BÜLTEN</a>
+    <span>PARS STUDIO</span>
+  </header>
+  <article id="story">Haber yükleniyor.</article>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const id = params.get("id");
+let stories = [];
+try { stories = JSON.parse(localStorage.getItem("bulten-all") || "[]"); } catch (e) {}
+const s = stories.find(x => x.id === id);
+const box = document.getElementById("story");
+if (!s) {
+  box.innerHTML = '<a class="back" href="index.html">← Anasayfaya dön</a><h1>Haber bulunamadı</h1><p>Listeye dönüp başlığı yeniden açın.</p>';
+} else {
+  document.title = s.title + " · Bülten";
+  const related = stories.filter(x => x.id !== s.id && x.cat === s.cat).slice(0, 4);
+  const paras = (s.body && s.body.length ? s.body : [s.lead || s.dek || s.title]).map(p => `<p>${p}</p>`).join("");
+  box.innerHTML = `
+    <a class="back" href="index.html">← Anasayfaya dön</a><span class="tag">${s.tag || ""}</span>
+    <h1>${s.title}</h1>
+    <div class="byline">${s.meta || ""} · Pars Studio masası</div>
+    <p class="lead">${s.lead || ""}</p>
+    ${paras}
+    ${s.sourceUrl ? `<a class="source" href="${s.sourceUrl}" target="_blank" rel="noopener">Kaynak: ${s.source || "Haberi kaynakta aç"}</a>` : ""}
+    <p class="note">Tam metnin hakları kaynak yayındadır. Bu sayfa başlığı ve masanın özetini gösterir; haberin tamamı kaynak linkindedir.</p>
+    <div class="related">${related.map(r => `<a href="haber.html?id=${encodeURIComponent(r.id)}">${r.title}</a>`).join("")}</div>
+  `;
+}
+</script>
+</body>
+</html>

@@ -825,30 +825,8 @@ function renderList() {
 function openStory(id) {
   const s = stories.find(x => x.id === id);
   if (!s) return;
-  listEl.classList.add("hidden");
-  document.getElementById("pager").style.display = "none";
-  emptyEl.style.display = "none";
-  const related = stories.filter(x => x.id !== id && (x.cat === s.cat || (s.cat === "yesilyurt" && x.cat === "malatya") || (s.cat === "malatya" && x.cat === "yesilyurt") || filter === "all")).slice(0, 3);
-  articleEl.innerHTML = `
-    <button class="back" id="backBtn">← Anasayfaya dön</button>
-    <span class="tag">${s.tag}</span>
-    <h2>${s.title}</h2>
-    <div class="byline">${s.meta} · Pars Studio masası</div>
-    <p class="lead">${s.lead}</p>
-    ${s.body.map((p, i) => i === 1 ? `<div class="pull">${p}</div>` : `<p>${p}</p>`).join("")}
-    <div class="related">
-      <div class="meta" style="margin-bottom:8px">İlgili başlıklar</div>
-      ${related.map(r => `<button data-id="${r.id}">${r.title}</button>`).join("")}
-    </div>
-    ${s.sourceUrl ? `<a class="source-link" href="${s.sourceUrl}" target="_blank" rel="noopener">Kaynak: ${s.source || "Haberi aç"}</a>` : ""}
-  `;
-  articleEl.classList.add("show");
-  titleEl.textContent = "HABER";
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  document.getElementById("backBtn").onclick = () => { renderList(); window.scrollTo({ top: 0, behavior: "smooth" }); };
-  articleEl.querySelectorAll(".related button").forEach(btn => {
-    btn.onclick = () => openStory(btn.dataset.id);
-  });
+  try { localStorage.setItem("bulten-all", JSON.stringify(stories)); } catch (err) {}
+  location.href = "haber.html?id=" + encodeURIComponent(id);
 }
 
 document.getElementById("nav").addEventListener("click", e => {
@@ -929,13 +907,11 @@ async function pullFeeds() {
           cat: feed.cat,
           tag: feed.tag,
           title,
-          dek: strip(item.description).slice(0, 140) || "Ajans akışından düşen yeni başlık",
+          dek: strip(item.description) || "Ajans akışından düşen yeni başlık",
           meta: (item.author || "Ajans") + " · " + new Date(item.pubDate || Date.now()).toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" }),
-          lead: title,
+          lead: strip(item.description) || title,
           body: [
-            strip(item.description) || "Başlık ajans akışından otomatik eklendi.",
-            item.link ? "Kaynak bağlantısı: " + item.link : "Ayrıntı için kaynağın kendi sayfasına bakın.",
-            "Bu kayıt Pars Studio canlı akışından geldi. Masa haberlerinin yerine geçmez; teyit için kaynak satırına bakın."
+            strip(item.description) || "Bu başlık ajans akışından geldi. Tam metin kaynakta."
           ],
           live: 1,
           added: Date.now(),
