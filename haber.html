@@ -4,89 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PARSHABER</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root { --ink:#111; --red:#d0121a; --cream:#f4efe6; --muted:#8b847a; }
-  * { box-sizing: border-box; }
-  html, body { margin:0; background:#1a1a1a; color:var(--ink); font-family:Inter,system-ui,sans-serif; scrollbar-width:none; }
-  html::-webkit-scrollbar, body::-webkit-scrollbar { display:none; }
-  a { color:inherit; }
-  .sheet { max-width:1000px; margin:0 auto; background:var(--cream); min-height:100vh; }
-  .topbar { background:#0c0c0c; }
-  header.mast { color:#fff; padding:16px 32px 18px; }
-  .mast-meta { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
-  .live-row { display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:800; letter-spacing:.16em; color:#fff; border:1px solid #3a3a3a; background:#161616; padding:6px 10px; }
-  .live-dot { width:7px; height:7px; border-radius:50%; background:#ff2a2a; box-shadow:0 0 0 0 rgba(255,42,42,.7); animation:pulse 1.4s infinite; }
-  @keyframes pulse { 70% { box-shadow:0 0 0 7px rgba(255,42,42,0); } 100% { box-shadow:0 0 0 0 rgba(255,42,42,0); } }
-  .edition { font-size:11px; letter-spacing:.18em; font-weight:700; color:#f2f2f2; }
-  .mast-row { display:flex; align-items:center; justify-content:space-between; gap:18px; }
-  .brand-logo img { display:block; width:250px; height:auto; }
-  .date-badge { background:#d0121a; color:#fff; padding:10px 14px 9px; text-align:right; min-width:108px; }
-  .date-badge b { display:block; font-family:"Bebas Neue",sans-serif; font-size:42px; line-height:.8; font-weight:400; }
-  .date-badge span { display:block; margin-top:4px; font-size:11px; font-weight:800; letter-spacing:.14em; }
-  nav.topics { display:flex; background:#111; border-top:1px solid #2a2a2a; overflow-x:auto; scrollbar-width:none; }
-  nav.topics a { color:#fff; text-decoration:none; border-bottom:3px solid transparent; padding:13px 16px 10px; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
-  nav.topics a:hover { color:#9a9a9a; }
-  .nav-toggle { width:46px; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:5px; padding:0; }
-  .nav-toggle span { width:18px; height:2px; background:#fff; display:block; }
-  .ticker { background:#0b3f8a; color:#fff; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; padding:10px 16px 8px; }
-  .ticker b { display:block; font-size:11px; letter-spacing:.06em; color:#d7e6ff; }
-  .ticker strong { display:block; margin-top:2px; font-size:16px; }
-  .ticker i { display:block; margin-top:2px; font-style:normal; font-size:12px; font-weight:700; }
-  .ticker .up { color:#3ddc6a; } .ticker .down { color:#ff5d6c; }
-  .weather { display:grid; grid-template-columns:1fr 1fr; background:#1c8f4e; }
-  .wcard { display:grid; grid-template-columns:108px 1fr; }
-  .wcard + .wcard { border-left:1px solid #0e6b3a; }
-  .wcard b { background:#0e6b3a; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:16px; }
-  .wcard b small { font-size:10px; margin-top:3px; }
-  .wdays { display:grid; grid-template-columns:repeat(3,1fr); }
-  .wdays span { text-align:center; color:#fff; font-weight:800; padding:6px 2px; }
-  .wdays i { display:block; font-style:normal; }
-  .wdays em, .wdays small { display:block; font-style:normal; font-size:12px; }
-  .marquee { background:#d9d9d9; color:#111; overflow:hidden; white-space:nowrap; position:relative; }
-  .son { position:absolute; left:0; top:0; bottom:0; z-index:2; display:flex; align-items:center; background:#d0121a; color:#fff; font-weight:800; font-size:13px; padding:0 14px; }
-  .marquee-view { overflow:hidden; }
-  .marquee-track { display:inline-block; padding:8px 0 8px 150px; animation:slide 80s linear infinite; }
-  .marquee b { color:#d0121a !important; margin-right:6px; }
-  .marquee span { margin-right:36px; font-size:14px; font-weight:700; }
-  .marquee a { color:#111; text-decoration:none; }
-  @keyframes slide { from { transform:translateX(0); } to { transform:translateX(-50%); } }
-  article { padding:28px 28px 64px; }
-  .back { display:inline-block; background:#d0121a; color:#fff; font-weight:800; letter-spacing:.08em; font-size:11px; text-decoration:none; padding:4px 10px; margin-right:8px; vertical-align:middle; }
-  .back:hover { background:#a50d14; }
-  .tag { display:inline-block; background:#111; color:#fff; font-size:10px; font-weight:800; letter-spacing:.12em; padding:5px 8px; vertical-align:middle; }
-  h1 { font-size:clamp(32px,5vw,52px); line-height:1.08; letter-spacing:-.03em; margin:14px 0 10px; }
-  .byline { color:var(--muted); font-size:14px; font-weight:600; margin-bottom:18px; }
-  .lead, p { font-size:19px; line-height:1.7; margin:0 0 16px; }
-  .lead { font-weight:650; }
-  .source { display:block; margin-top:28px; padding-top:16px; border-top:1px solid #ddd4c6; font-weight:800; font-size:16px; color:#111; }
-  .source span { color:var(--red); }
-  .source a { color:#111; text-decoration: underline; }
-  .note { color:#8a837a; font-size:13px; line-height:1.5; margin-top:10px; }
-  .related { margin-top:28px; border-top:1px solid #ddd4c6; padding-top:12px; }
-  .related a { display:block; padding:12px 0; border-bottom:1px dashed #d9d1c4; color:#111; font-weight:700; text-decoration:none; }
-  footer.foot { background:#0c0c0c; color:#cfcfcf; padding:28px; }
-  .stamp { width:250px; height:auto; margin:0 0 12px; }
-  .foot-grid { display:grid; grid-template-columns:1.3fr 1fr 1.2fr auto; gap:28px; padding-bottom:18px; border-bottom:1px solid #2a2a2a; }
-  .foot-brand p { margin:6px 0 0; color:#8d8d8d; font-size:13px; line-height:1.5; max-width:260px; }
-  .foot-col b { display:block; color:#fff; font-size:12px; letter-spacing:.14em; margin-bottom:10px; }
-  .foot-col a { display:block; padding:4px 0; color:#bdbdbd; font-size:14px; font-weight:600; text-decoration:none; }
-  .foot-col a:hover { color:#fff; }
-  .social { display:flex; flex-direction:column; gap:10px; align-items:flex-end; }
-  .social a { width:36px; height:36px; border:1px solid #333; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; }
-  .social svg { width:16px; height:16px; fill:currentColor; }
-  .foot-bar { display:flex; justify-content:space-between; gap:12px; align-items:center; padding-top:18px; font-size:12px; color:#8a8a8a; }
-  .foot-bar a { color:#fff; font-weight:800; text-decoration:none; }
-  @media (max-width:640px) {
-    .brand-logo img, .stamp { width:180px; }
-    .foot-grid, .foot-bar { display:flex; flex-direction:column; align-items:flex-start; }
-  }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Faculty+Glyphic&family=Inter:wght@400;500;600;700;800&family=Lato:wght@400;700;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="habericerik.css">
 </head>
 <body>
 <div class="sheet">
-  <div class="topbar">
-    <header class="mast">
+<div id="slot-header">
+<header class="mast">
       <div class="mast-meta">
         <div class="live-row"><span class="live-dot"></span> CANLI · <span id="clock">15:31</span></div>
         <div class="edition">PARS HABER · GÜNÜN BASKISI</div>
@@ -98,32 +23,59 @@
         <div class="date-badge"><b id="dayNum">06</b><span id="dayLabel">EKİM 2026</span></div>
       </div>
     </header>
-    <nav class="topics">
-      <a class="nav-toggle" href="index.html" aria-label="navigasyon"><span></span><span></span><span></span></a>
-      <a href="index.html">Anasayfa</a>
-      <a href="index.html">Mersin</a>
-      <a href="index.html">Malatya</a>
-      <a href="index.html">Fenerbahçe</a>
-      <a href="index.html">Malatyaspor</a>
-      <a href="index.html">Yeni Parti</a>
-      <a href="index.html">CHP</a>
+</div>
+<div id="slot-nav">
+<nav class="topics" id="nav">
+      <button class="nav-toggle" type="button" aria-label="navigasyon"><span></span><span></span><span></span></button>
+      <button data-filter="all" class="active">Anasayfa</button>
+      <button data-filter="mersin">Mersin</button>
+      <button data-filter="malatya">Malatya</button>
+      <button data-filter="fenerbahce">Fenerbahçe</button>
+      <button data-filter="yesilyurt">Malatyaspor</button>
+      <button data-filter="yeniparti">Yeni Parti</button>
+      <button data-filter="chp">CHP</button>
     </nav>
-    <div class="ticker">
-      <div class="fx"><b>GRAM ALTIN</b><strong>6.587,23</strong><i class="up">%0,70 (45,79)</i></div>
-      <div class="fx"><b>DOLAR</b><strong>49,1794</strong><i class="up">%0,08 (0,0393)</i></div>
-      <div class="fx"><b>EURO</b><strong>55,4060</strong><i class="up">%0,40 (0,2207)</i></div>
-      <div class="fx"><b>STERLİN</b><strong>65,3328</strong><i class="up">%0,59 (0,3832)</i></div>
-      <div class="fx"><b>BIST 100</b><strong>12.395,31</strong><i class="down">%-0,39 (-48,53)</i></div>
-      <div class="fx"><b>BITCOIN</b><strong>$86.084</strong><i class="down">%-0,05 (-$45)</i></div>
+</div>
+<div id="slot-doviz">
+<div class="ticker" id="ticker">
+      <div class="fx"><b>GRAM ALTIN</b><strong id="fx-gold">6.587,23</strong><i id="fx-gold-c" class="up">%0,70 (45,79)</i></div>
+      <div class="fx"><b>DOLAR</b><strong id="fx-usd">49,1794</strong><i id="fx-usd-c" class="up">%0,08 (0,0393)</i></div>
+      <div class="fx"><b>EURO</b><strong id="fx-eur">55,4060</strong><i id="fx-eur-c" class="up">%0,40 (0,2207)</i></div>
+      <div class="fx"><b>STERLİN</b><strong id="fx-gbp">65,3328</strong><i id="fx-gbp-c" class="up">%0,59 (0,3832)</i></div>
+      <div class="fx"><b>BIST 100</b><strong id="fx-bist">12.395,31</strong><i id="fx-bist-c" class="down">%-0,39 (-48,53)</i></div>
+      <div class="fx"><b>BITCOIN</b><strong id="fx-btc">$86.084</strong><i id="fx-btc-c" class="down">%-0,05 (-$45)</i></div>
     </div>
-    <div class="weather">
+</div>
+<div id="slot-hava">
+<div class="weather" id="weather">
       <div class="wcard"><b>MERSİN<small>Hava Durumu</small></b><div class="wdays" id="w-mersin"></div></div>
       <div class="wcard"><b>MALATYA<small>Hava Durumu</small></b><div class="wdays" id="w-malatya"></div></div>
     </div>
-    <div class="marquee"><span class="son">SON HABERLER</span><div class="marquee-view"><div class="marquee-track" id="marquee"></div></div></div>
+</div>
+<div id="slot-kayar">
+<div class="marquee"><span class="son">SON HABERLER</span><div class="marquee-view"><div class="marquee-track" id="marquee"></div></div></div>
+</div>
+<div id="slot-icerik">
+<article id="story">
+  <div class="story-top"><span class="tag">YARGI</span></div>
+  <h1>Seçer ve 2 ilçe başkanı tutuklandı</h1>
+  <div class="byline">Kaynak: AA - DHA / Tarih: 6 Ekim 2026 / Saat: 17.37</div>
+  <p class="lead">Mersin’de belediyelere yönelik yolsuzluk soruşturmasında Büyükşehir Belediye Başkanı Vahap Seçer ile Yenişehir ve Mezitli belediye başkanları tutuklandı.</p>
+  <p>Mersin Cumhuriyet Başsavcılığı’nın ihale ve doğrudan temin işlemlerine ilişkin yürüttüğü soruşturma kapsamında 1 Ekim’de eş zamanlı operasyon düzenlenmiş, ilk etapta 59 kişi gözaltına alınmıştı. Adliyeye sevk edilen şüphelilerin sorgusu 6 Ekim’de tamamlandı.</p>
+  <p class="source"><span>Kaynak:</span> <a href="https://www.birgun.net/haber/mersinde-belediyelere-operasyon-vahap-secer-ve-2-belediye-baskani-dahil-34-tutuklama-738798" target="_blank" rel="noopener">BirGün</a></p>
+  <p class="note">Bu sayfa Pars Haber özetidir. Ajans metni kopyalanmaz. Tam yazı alttaki kaynaktadır.</p>
+  <div class="others">
+    <b style="display:block;margin-bottom:8px;padding-bottom:10px;border-bottom:1px dashed #d9d1c4;color:#8a837a">Diğer Haberler:</b>
+    <a href="haber.html?id=fb-ayari" style="display:block;padding:10px 0;border-bottom:1px dashed #d9d1c4;color:#111;font-weight:400;text-decoration:none" onmouseover="this.style.color='#d0121a';this.style.textDecoration='underline'" onmouseout="this.style.color='#111';this.style.textDecoration='none'">Fenerbahçe Ayari ve Alcaraz’ı yokluyor</a>
+    <a href="haber.html?id=yesilyurt-9-1" style="display:block;padding:10px 0;border-bottom:1px dashed #d9d1c4;color:#111;font-weight:400;text-decoration:none" onmouseover="this.style.color='#d0121a';this.style.textDecoration='underline'" onmouseout="this.style.color='#111';this.style.textDecoration='none'">Malatyaspor 9-1, grup lideri</a>
+    <a href="haber.html?id=yeni-parti-uye" style="display:block;padding:10px 0;border-bottom:1px dashed #d9d1c4;color:#111;font-weight:400;text-decoration:none" onmouseover="this.style.color='#d0121a';this.style.textDecoration='underline'" onmouseout="this.style.color='#111';this.style.textDecoration='none'">Yeni Parti 753 bin üyede</a>
+    <a href="haber.html?id=chp-grup" style="display:block;padding:10px 0;border-bottom:1px dashed #d9d1c4;color:#111;font-weight:400;text-decoration:none" onmouseover="this.style.color='#d0121a';this.style.textDecoration='underline'" onmouseout="this.style.color='#111';this.style.textDecoration='none'">Kılıçdaroğlu: Kimse yargılanamaz değil</a>
+    <a href="haber.html?id=malatya-yagis" style="display:block;padding:10px 0;border-bottom:1px dashed #d9d1c4;color:#111;font-weight:400;text-decoration:none" onmouseover="this.style.color='#d0121a';this.style.textDecoration='underline'" onmouseout="this.style.color='#111';this.style.textDecoration='none'">Malatya’ya sel ve dolu uyarısı</a>
   </div>
-  <article id="story">Haber yükleniyor.</article>
-  <footer class="foot">
+</article>
+</div>
+<div id="slot-footer">
+<footer class="foot">
     <div class="foot-grid">
       <div class="foot-brand">
         <img class="stamp" src="logo.png" alt="Pars Haber">
@@ -131,12 +83,12 @@
       </div>
       <div class="foot-col">
         <b>BÖLÜMLER</b>
-        <a href="index.html">Mersin</a>
-        <a href="index.html">Malatya</a>
-        <a href="index.html">Fenerbahçe</a>
-        <a href="index.html">Malatyaspor</a>
-        <a href="index.html">Yeni Parti</a>
-        <a href="index.html">CHP</a>
+        <button data-filter="mersin">Mersin</button>
+        <button data-filter="malatya">Malatya</button>
+        <button data-filter="fenerbahce">Fenerbahçe</button>
+        <button data-filter="yesilyurt">Malatyaspor</button>
+        <button data-filter="yeniparti">Yeni Parti</button>
+        <button data-filter="chp">CHP</button>
       </div>
       <div class="foot-col">
         <b>PROJELER</b>
@@ -160,29 +112,47 @@
     </div>
   </footer>
 </div>
+</div>
+
 <script>
+async function loadParts() {
+  const parts = ["header.html","navigasyon.html","doviz.html","hava.html","kayar.html","habericerik.html","footer.html"];
+  const slots = ["slot-header","slot-nav","slot-doviz","slot-hava","slot-kayar","slot-icerik","slot-footer"];
+  for (let i = 0; i < parts.length; i++) {
+    try {
+      const res = await fetch(parts[i]);
+      if (res.ok) {
+        const html = await res.text();
+        document.getElementById(slots[i]).innerHTML = parts[i] === "habericerik.html" && html.includes("<article")
+          ? html.slice(html.indexOf("<article"), html.indexOf("</article>") + 10)
+          : html;
+      }
+    } catch (err) {}
+  }
+}
+loadParts().then(start).catch(start);
+function start() {
 function tick() {
   const now = new Date();
-  document.getElementById("clock").textContent = new Intl.DateTimeFormat("tr-TR", { timeZone:"Europe/Istanbul", hour:"2-digit", minute:"2-digit", second:"2-digit" }).format(now);
+  const clock = document.getElementById("clock");
+  if (clock) clock.textContent = new Intl.DateTimeFormat("tr-TR", { timeZone:"Europe/Istanbul", hour:"2-digit", minute:"2-digit", second:"2-digit" }).format(now);
   const parts = new Intl.DateTimeFormat("tr-TR", { timeZone:"Europe/Istanbul", day:"2-digit", month:"long", year:"numeric" }).formatToParts(now);
   const pick = type => (parts.find(p => p.type === type) || {}).value || "";
-  document.getElementById("dayNum").textContent = pick("day");
-  document.getElementById("dayLabel").textContent = (pick("month") + " " + pick("year")).toLocaleUpperCase("tr");
+  const day = document.getElementById("dayNum");
+  const label = document.getElementById("dayLabel");
+  if (day) day.textContent = pick("day");
+  if (label) label.textContent = (pick("month") + " " + pick("year")).toLocaleUpperCase("tr");
 }
 tick();
 setInterval(tick, 1000);
 ["w-mersin","w-malatya"].forEach((id, n) => {
+  const box = document.getElementById(id);
+  if (!box) return;
   const highs = n ? [19,21,21] : [28,30,32];
   const lows = n ? [11,9,10] : [19,19,20];
   const days = [0,1,2].map(i => new Intl.DateTimeFormat("tr-TR", { timeZone:"Europe/Istanbul", weekday:"long" }).format(new Date(Date.now()+i*86400000)));
-  document.getElementById(id).innerHTML = days.map((d,i) => `<span><i>⛅</i><strong>${highs[i]}</strong><em>${lows[i]}</em><small>${d}</small></span>`).join("");
+  box.innerHTML = days.map((d,i) => `<span><i>⛅</i><strong>${highs[i]}</strong><em>${lows[i]}</em><small>${d}</small></span>`).join("");
 });
-try {
-  const stories = JSON.parse(localStorage.getItem("bulten-all") || "[]");
-  const bits = stories.map(s => `<span><b style="color:#d0121a">${s.tag}:</b> <a href="haber.html?id=${encodeURIComponent(s.id)}">${s.title}</a></span>`).join("");
-  const box = document.getElementById("marquee");
-  if (box && bits) box.innerHTML = bits + bits;
-} catch (e) {}
 function storyDate(s) {
   const names = (s.meta || "").split("·").map(x => x.trim()).filter(x => x && !/\d/.test(x) && !/ekim|canlı|masa/i.test(x));
   const kaynak = names.length ? names.join(" - ") : (s.source || "AA");
@@ -196,8 +166,12 @@ const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let stories = [];
 try { stories = JSON.parse(localStorage.getItem("bulten-all") || "[]"); } catch (e) {}
+const bits = stories.map(s => `<span><b style="color:#d0121a">${s.tag}:</b> <a href="haber.html?id=${encodeURIComponent(s.id)}">${s.title}</a></span>`).join("");
+const marquee = document.getElementById("marquee");
+if (marquee && bits) marquee.innerHTML = bits + bits;
 const s = stories.find(x => x.id === id);
 const box = document.getElementById("story");
+if (!box) return;
 if (!s) {
   box.innerHTML = '<h1>Haber bulunamadı</h1><p>Listeye dönüp başlığı yeniden açın.</p>';
 } else {
@@ -207,17 +181,18 @@ if (!s) {
     .filter(p => p && !/news\.google\.com|Kaynak bağlantısı|canlı akışından geldi/i.test(p))
     .map(p => `<p>${p}</p>`).join("");
   box.innerHTML = `
-    <a class="back" href="index.html">Geri</a>
-    <span class="tag">${s.tag || ""}</span>
+    <div class="story-top"><span class="tag">${s.tag || ""}</span></div>
     <h1>${s.title}</h1>
     <div class="byline">${storyDate(s)}</div>
     <p class="lead">${s.lead || ""}</p>
     ${paras}
     ${s.sourceUrl ? `<p class="source"><span>Kaynak:</span> <a href="${s.sourceUrl}" target="_blank" rel="noopener">${s.source || "Kaynak"}</a></p>` : ""}
     <p class="note">Bu sayfa Pars Haber özetidir. Ajans metni kopyalanmaz. Tam yazı alttaki kaynaktadır.</p>
-    <div class="related">${related.map(r => `<a href="haber.html?id=${encodeURIComponent(r.id)}">${r.title}</a>`).join("")}</div>
+    <div class="others"><b style="display:block;margin-bottom:8px;padding-bottom:10px;border-bottom:1px dashed #d9d1c4;color:#8a837a">Diğer Haberler:</b>${stories.filter(x => x.id !== s.id).slice(0, 5).map(r => `<a href="haber.html?id=${encodeURIComponent(r.id)}" style="display:block;padding:10px 0;border-bottom:1px dashed #d9d1c4;color:#111;font-weight:400;text-decoration:none" onmouseover="this.style.color='#d0121a';this.style.textDecoration='underline'" onmouseout="this.style.color='#111';this.style.textDecoration='none'">${r.title}</a>`).join("")}</div>
   `;
 }
+}
 </script>
+
 </body>
 </html>
