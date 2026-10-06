@@ -20,7 +20,21 @@
     --paper: #f7f3ec;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  .sheet::-webkit-scrollbar,
+  nav.topics::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
   body {
     font-family: Inter, system-ui, sans-serif;
     background: #1a1a1a;
@@ -150,6 +164,8 @@
     background: #111;
     border-top: 1px solid #2a2a2a;
     overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
   }
   nav.topics button {
     background: transparent;
@@ -415,6 +431,10 @@
   }
 
   @media (max-width: 640px) {
+    html, body, .sheet {
+      scrollbar-width: none;
+      overscroll-behavior-y: contain;
+    }
     header.mast, .item, .article, footer.foot, .ticker { padding-left: 18px; padding-right: 18px; }
     .item { grid-template-columns: 46px 1fr; padding-top: 16px; }
     .item h2 { font-size: 18px; }
