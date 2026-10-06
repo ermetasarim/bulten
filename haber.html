@@ -11,28 +11,57 @@
   html, body { margin:0; background:#1a1a1a; color:var(--ink); font-family:Inter,system-ui,sans-serif; scrollbar-width:none; }
   html::-webkit-scrollbar, body::-webkit-scrollbar { display:none; }
   a { color:inherit; }
-  .sheet { max-width:980px; margin:0 auto; background:var(--cream); min-height:100vh; }
-  .mast { background:#0c0c0c; color:#fff; padding:16px 32px 18px; }
-  .mast-meta, .mast-row { display:flex; justify-content:space-between; align-items:center; gap:18px; }
-  .live-dot { width:8px; height:8px; border-radius:50%; background:#ff2a2a; display:inline-block; margin-right:6px; }
-  .edition { font-size:11px; letter-spacing:.18em; font-weight:700; }
+  .sheet { max-width:1000px; margin:0 auto; background:var(--cream); min-height:100vh; }
+  .topbar { background:#0c0c0c; }
+  header.mast { color:#fff; padding:16px 32px 18px; }
+  .mast-meta { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+  .live-row { display:inline-flex; align-items:center; gap:8px; font-size:11px; font-weight:800; letter-spacing:.16em; color:#fff; border:1px solid #3a3a3a; background:#161616; padding:6px 10px; }
+  .live-dot { width:7px; height:7px; border-radius:50%; background:#ff2a2a; box-shadow:0 0 0 0 rgba(255,42,42,.7); animation:pulse 1.4s infinite; }
+  @keyframes pulse { 70% { box-shadow:0 0 0 7px rgba(255,42,42,0); } 100% { box-shadow:0 0 0 0 rgba(255,42,42,0); } }
+  .edition { font-size:11px; letter-spacing:.18em; font-weight:700; color:#f2f2f2; }
+  .mast-row { display:flex; align-items:center; justify-content:space-between; gap:18px; }
   .brand-logo img { display:block; width:250px; height:auto; }
-  .date-badge { background:var(--red); color:#fff; padding:10px 14px 9px; text-align:right; min-width:108px; }
+  .date-badge { background:#d0121a; color:#fff; padding:10px 14px 9px; text-align:right; min-width:108px; }
   .date-badge b { display:block; font-family:"Bebas Neue",sans-serif; font-size:42px; line-height:.8; font-weight:400; }
   .date-badge span { display:block; margin-top:4px; font-size:11px; font-weight:800; letter-spacing:.14em; }
-  nav.topics { display:flex; background:#111; overflow-x:auto; scrollbar-width:none; }
-  nav.topics a, .nav-toggle { color:#fff; text-decoration:none; border:0; background:transparent; border-bottom:3px solid transparent; padding:13px 16px 10px; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+  nav.topics { display:flex; background:#111; border-top:1px solid #2a2a2a; overflow-x:auto; scrollbar-width:none; }
+  nav.topics a { color:#fff; text-decoration:none; border-bottom:3px solid transparent; padding:13px 16px 10px; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
   nav.topics a:hover { color:#9a9a9a; }
-  .nav-toggle { width:46px; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:5px; }
+  .nav-toggle { width:46px; background:#000; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:5px; padding:0; }
   .nav-toggle span { width:18px; height:2px; background:#fff; display:block; }
+  .ticker { background:#0b3f8a; color:#fff; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; padding:10px 16px 8px; }
+  .ticker b { display:block; font-size:11px; letter-spacing:.06em; color:#d7e6ff; }
+  .ticker strong { display:block; margin-top:2px; font-size:16px; }
+  .ticker i { display:block; margin-top:2px; font-style:normal; font-size:12px; font-weight:700; }
+  .ticker .up { color:#3ddc6a; } .ticker .down { color:#ff5d6c; }
+  .weather { display:grid; grid-template-columns:1fr 1fr; background:#1c8f4e; }
+  .wcard { display:grid; grid-template-columns:108px 1fr; }
+  .wcard + .wcard { border-left:1px solid #0e6b3a; }
+  .wcard b { background:#0e6b3a; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:16px; }
+  .wcard b small { font-size:10px; margin-top:3px; }
+  .wdays { display:grid; grid-template-columns:repeat(3,1fr); }
+  .wdays span { text-align:center; color:#fff; font-weight:800; padding:6px 2px; }
+  .wdays i { display:block; font-style:normal; }
+  .wdays em, .wdays small { display:block; font-style:normal; font-size:12px; }
+  .marquee { background:#d9d9d9; color:#111; overflow:hidden; white-space:nowrap; position:relative; }
+  .son { position:absolute; left:0; top:0; bottom:0; z-index:2; display:flex; align-items:center; background:#d0121a; color:#fff; font-weight:800; font-size:13px; padding:0 14px; }
+  .marquee-view { overflow:hidden; }
+  .marquee-track { display:inline-block; padding:8px 0 8px 150px; animation:slide 80s linear infinite; }
+  .marquee b { color:#d0121a !important; margin-right:6px; }
+  .marquee span { margin-right:36px; font-size:14px; font-weight:700; }
+  .marquee a { color:#111; text-decoration:none; }
+  @keyframes slide { from { transform:translateX(0); } to { transform:translateX(-50%); } }
   article { padding:28px 28px 64px; }
-  .back { color:var(--red); font-weight:800; letter-spacing:.08em; font-size:12px; text-decoration:none; }
-  .tag { display:inline-block; background:#111; color:#fff; font-size:10px; font-weight:800; letter-spacing:.12em; padding:3px 6px; margin-left:8px; }
+  .back { display:inline-block; background:#d0121a; color:#fff; font-weight:800; letter-spacing:.08em; font-size:11px; text-decoration:none; padding:4px 10px; margin-right:8px; vertical-align:middle; }
+  .back:hover { background:#a50d14; }
+  .tag { display:inline-block; background:#111; color:#fff; font-size:10px; font-weight:800; letter-spacing:.12em; padding:5px 8px; vertical-align:middle; }
   h1 { font-size:clamp(32px,5vw,52px); line-height:1.08; letter-spacing:-.03em; margin:14px 0 10px; }
   .byline { color:var(--muted); font-size:14px; font-weight:600; margin-bottom:18px; }
   .lead, p { font-size:19px; line-height:1.7; margin:0 0 16px; }
   .lead { font-weight:650; }
-  .source { display:block; margin-top:28px; padding-top:16px; border-top:1px solid #ddd4c6; color:var(--red); font-weight:800; font-size:16px; }
+  .source { display:block; margin-top:28px; padding-top:16px; border-top:1px solid #ddd4c6; font-weight:800; font-size:16px; color:#111; }
+  .source span { color:var(--red); }
+  .source a { color:#111; text-decoration: underline; }
   .note { color:#8a837a; font-size:13px; line-height:1.5; margin-top:10px; }
   .related { margin-top:28px; border-top:1px solid #ddd4c6; padding-top:12px; }
   .related a { display:block; padding:12px 0; border-bottom:1px dashed #d9d1c4; color:#111; font-weight:700; text-decoration:none; }
@@ -56,26 +85,43 @@
 </head>
 <body>
 <div class="sheet">
-  <header class="mast">
-    <div class="mast-meta">
-      <div><span class="live-dot"></span> CANLI · <span id="clock">00:00</span></div>
-      <div class="edition">PARS HABER · GÜNÜN BASKISI</div>
+  <div class="topbar">
+    <header class="mast">
+      <div class="mast-meta">
+        <div class="live-row"><span class="live-dot"></span> CANLI · <span id="clock">15:31</span></div>
+        <div class="edition">PARS HABER · GÜNÜN BASKISI</div>
+      </div>
+      <div class="mast-row">
+        <div class="wordmark">
+          <a class="brand-logo" href="index.html"><img src="logo.png" alt="PARS HABER"></a>
+        </div>
+        <div class="date-badge"><b id="dayNum">06</b><span id="dayLabel">EKİM 2026</span></div>
+      </div>
+    </header>
+    <nav class="topics">
+      <a class="nav-toggle" href="index.html" aria-label="navigasyon"><span></span><span></span><span></span></a>
+      <a href="index.html">Anasayfa</a>
+      <a href="index.html">Mersin</a>
+      <a href="index.html">Malatya</a>
+      <a href="index.html">Fenerbahçe</a>
+      <a href="index.html">Malatyaspor</a>
+      <a href="index.html">Yeni Parti</a>
+      <a href="index.html">CHP</a>
+    </nav>
+    <div class="ticker">
+      <div class="fx"><b>GRAM ALTIN</b><strong>6.587,23</strong><i class="up">%0,70 (45,79)</i></div>
+      <div class="fx"><b>DOLAR</b><strong>49,1794</strong><i class="up">%0,08 (0,0393)</i></div>
+      <div class="fx"><b>EURO</b><strong>55,4060</strong><i class="up">%0,40 (0,2207)</i></div>
+      <div class="fx"><b>STERLİN</b><strong>65,3328</strong><i class="up">%0,59 (0,3832)</i></div>
+      <div class="fx"><b>BIST 100</b><strong>12.395,31</strong><i class="down">%-0,39 (-48,53)</i></div>
+      <div class="fx"><b>BITCOIN</b><strong>$86.084</strong><i class="down">%-0,05 (-$45)</i></div>
     </div>
-    <div class="mast-row">
-      <a class="brand-logo" href="index.html"><img src="logo.png" alt="PARS HABER"></a>
-      <div class="date-badge"><b id="dayNum">06</b><span id="dayLabel">EKİM 2026</span></div>
+    <div class="weather">
+      <div class="wcard"><b>MERSİN<small>Hava Durumu</small></b><div class="wdays" id="w-mersin"></div></div>
+      <div class="wcard"><b>MALATYA<small>Hava Durumu</small></b><div class="wdays" id="w-malatya"></div></div>
     </div>
-  </header>
-  <nav class="topics">
-    <a class="nav-toggle" href="index.html" aria-label="navigasyon"><span></span><span></span><span></span></a>
-    <a href="index.html">Anasayfa</a>
-    <a href="index.html">Mersin</a>
-    <a href="index.html">Malatya</a>
-    <a href="index.html">Fenerbahçe</a>
-    <a href="index.html">Malatyaspor</a>
-    <a href="index.html">Yeni Parti</a>
-    <a href="index.html">CHP</a>
-  </nav>
+    <div class="marquee"><span class="son">SON HABERLER</span><div class="marquee-view"><div class="marquee-track" id="marquee"></div></div></div>
+  </div>
   <article id="story">Haber yükleniyor.</article>
   <footer class="foot">
     <div class="foot-grid">
@@ -125,6 +171,27 @@ function tick() {
 }
 tick();
 setInterval(tick, 1000);
+["w-mersin","w-malatya"].forEach((id, n) => {
+  const highs = n ? [19,21,21] : [28,30,32];
+  const lows = n ? [11,9,10] : [19,19,20];
+  const days = [0,1,2].map(i => new Intl.DateTimeFormat("tr-TR", { timeZone:"Europe/Istanbul", weekday:"long" }).format(new Date(Date.now()+i*86400000)));
+  document.getElementById(id).innerHTML = days.map((d,i) => `<span><i>⛅</i><strong>${highs[i]}</strong><em>${lows[i]}</em><small>${d}</small></span>`).join("");
+});
+try {
+  const stories = JSON.parse(localStorage.getItem("bulten-all") || "[]");
+  const bits = stories.map(s => `<span><b style="color:#d0121a">${s.tag}:</b> <a href="haber.html?id=${encodeURIComponent(s.id)}">${s.title}</a></span>`).join("");
+  const box = document.getElementById("marquee");
+  if (box && bits) box.innerHTML = bits + bits;
+} catch (e) {}
+function storyDate(s) {
+  const names = (s.meta || "").split("·").map(x => x.trim()).filter(x => x && !/\d/.test(x) && !/ekim|canlı|masa/i.test(x));
+  const kaynak = names.length ? names.join(" - ") : (s.source || "AA");
+  const d = new Date(s.published || s.added || Date.now());
+  const fmt = opt => new Intl.DateTimeFormat("tr-TR", Object.assign({ timeZone: "Europe/Istanbul" }, opt)).format(d);
+  const day = String(Number(fmt({ day: "2-digit" })));
+  const clock = fmt({ hour: "2-digit", minute: "2-digit" }).replace(":", ".");
+  return "Kaynak: " + kaynak + " / Tarih: " + day + " " + fmt({ month: "long" }) + " " + fmt({ year: "numeric" }) + " / Saat: " + clock;
+}
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let stories = [];
@@ -132,7 +199,7 @@ try { stories = JSON.parse(localStorage.getItem("bulten-all") || "[]"); } catch 
 const s = stories.find(x => x.id === id);
 const box = document.getElementById("story");
 if (!s) {
-  box.innerHTML = '<a class="back" href="index.html">← Anasayfaya dön</a><h1>Haber bulunamadı</h1><p>Listeye dönüp başlığı yeniden açın.</p>';
+  box.innerHTML = '<h1>Haber bulunamadı</h1><p>Listeye dönüp başlığı yeniden açın.</p>';
 } else {
   document.title = s.title + " · PARSHABER";
   const related = stories.filter(x => x.id !== s.id && x.cat === s.cat).slice(0, 4);
@@ -140,12 +207,13 @@ if (!s) {
     .filter(p => p && !/news\.google\.com|Kaynak bağlantısı|canlı akışından geldi/i.test(p))
     .map(p => `<p>${p}</p>`).join("");
   box.innerHTML = `
-    <a class="back" href="index.html">← Anasayfaya dön</a><span class="tag">${s.tag || ""}</span>
+    <a class="back" href="index.html">Geri</a>
+    <span class="tag">${s.tag || ""}</span>
     <h1>${s.title}</h1>
-    <div class="byline">${s.meta || ""} · Pars Haber masası</div>
+    <div class="byline">${storyDate(s)}</div>
     <p class="lead">${s.lead || ""}</p>
     ${paras}
-    ${s.sourceUrl ? `<a class="source" href="${s.sourceUrl}" target="_blank" rel="noopener">Kaynak: ${s.source || "Haberi kaynakta aç"}</a>` : ""}
+    ${s.sourceUrl ? `<p class="source"><span>Kaynak:</span> <a href="${s.sourceUrl}" target="_blank" rel="noopener">${s.source || "Kaynak"}</a></p>` : ""}
     <p class="note">Bu sayfa Pars Haber özetidir. Ajans metni kopyalanmaz. Tam yazı alttaki kaynaktadır.</p>
     <div class="related">${related.map(r => `<a href="haber.html?id=${encodeURIComponent(r.id)}">${r.title}</a>`).join("")}</div>
   `;

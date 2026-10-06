@@ -45,7 +45,7 @@
   button { font-family: inherit; cursor: pointer; }
 
   .sheet {
-    max-width: 920px;
+    max-width: 1000px;
     margin: 0 auto;
     background: var(--cream);
     min-height: 100vh;
@@ -883,16 +883,24 @@ const FEEDS = [
   { cat: "chp", tag: "CHP", url: "https://www.aa.com.tr/tr/rss/default?cat=politika", q: "CHP" }
 ];
 
+function lineMeta(s) {
+  const names = (s.meta || "").split("·").map(x => x.trim()).filter(x => x && !/\d/.test(x) && !/ekim|canlı/i.test(x));
+  const kaynak = names.length ? names.join(" - ") : (s.source || "AA");
+  const d = new Date(s.published || s.added || Date.now());
+  const fmt = opt => new Intl.DateTimeFormat("tr-TR", Object.assign({ timeZone: "Europe/Istanbul" }, opt)).format(d);
+  const day = String(Number(fmt({ day: "2-digit" })));
+  const clock = fmt({ hour: "2-digit", minute: "2-digit" }).replace(":", ".");
+  return "Kaynak: " + kaynak + " / Tarih: " + day + " " + fmt({ month: "long" }) + " " + fmt({ year: "numeric" }) + " / Saat: " + clock;
+}
 function shortTitle(title) {
   const t = (title || "").replace(/\s+/g, " ").trim();
   return t.length > 50 ? t.slice(0, 50).trim() + "..." : t;
 }
-function rank(s) {
-  const i = ORDER.indexOf(s.cat);
-  return i === -1 ? 99 : i;
+function storyTime(s) {
+  return s.published || s.added || 0;
 }
 function sortStories(list) {
-  return list.slice().sort((a, b) => rank(a) - rank(b) || (b.live - a.live) || (b.added || 0) - (a.added || 0));
+  return list.slice().sort((a, b) => storyTime(b) - storyTime(a));
 }
 
 function capStories() {
@@ -929,7 +937,7 @@ function renderList() {
         <span class="tag">${s.tag}</span>
         <h2>${s.title}</h2>
         <p class="dek">${s.dek}</p>
-        <div class="meta">${s.meta}${s.live ? " · CANLI AKIŞ" : ""}</div>
+        <div class="meta">${lineMeta(s)}</div>
       </div>
     </article>
   `).join("");
@@ -1128,13 +1136,15 @@ async function pullFeeds() {
       (data.items || []).filter(item => !feed.q || (item.title + " " + (item.description || "")).toLocaleLowerCase("tr").includes(feed.q.toLocaleLowerCase("tr"))).slice(0, 8).forEach(item => {
         const title = shortTitle(strip(item.title).replace(/ - .+$/, "").split("|")[0].replace(/SON DAKİKA HABERİ:?/i, "").trim());
         if (!title || known(title)) return;
+        const published = Date.parse(item.pubDate || "") || Date.now();
+        const when = new Date(published);
         stories.push({
           id: "live-" + Math.random().toString(36).slice(2, 9),
           cat: feed.cat,
           tag: feed.tag,
           title,
           dek: "Pars Haber masa özeti. Tam metin kaynakta.",
-          meta: "AA başlığı · " + new Date(item.pubDate || Date.now()).toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" }),
+          meta: "AA · " + when.toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" }),
           lead: title + " başlığı Anadolu Ajansı akışına düştü. Aşağıdaki metin masanın kendi özetidir, ajans yazısı değildir.",
           body: [
             title + " gelişmesi bugünkü AA akışında yer aldı. Masa, haberi kaynak cümlelerini taşımadan özetliyor.",
@@ -1143,6 +1153,7 @@ async function pullFeeds() {
           ],
           live: 1,
           added: Date.now(),
+          published,
           source: "Anadolu Ajansı",
           sourceUrl: item.link || "https://www.aa.com.tr"
         });
@@ -1150,7 +1161,7 @@ async function pullFeeds() {
       });
     } catch (err) {}
   }
-  if (added && !articleEl.classList.contains("show")) renderList();
+  if (!articleEl.classList.contains("show")) renderList();
   try {
     localStorage.setItem("bulten-live", JSON.stringify(stories.filter(s => s.live).slice(-40)));
   } catch (err) {}
@@ -1161,8 +1172,9 @@ try {
   });
 } catch (err) {}
 pullFeeds();
-setInterval(pullFeeds, 2 * 60 * 1000);
+setInterval(pullFeeds, 60 * 1000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) pullFeeds(); });
+stories.forEach((s, i) => { if (!s.published) s.published = Date.now() - (i + 1) * 30 * 60 * 1000; });
 
 renderList();
 </script>
