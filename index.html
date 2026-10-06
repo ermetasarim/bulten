@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bülten · Pars Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #111111;
+    --black: #0c0c0c;
+    --cream: #f4efe6;
+    --cream-2: #ebe4d8;
+    --red: #d0121a;
+    --red-deep: #a50d14;
+    --muted: #8b847a;
+    --line: #d9d1c4;
+    --paper: #f7f3ec;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: Inter, system-ui, sans-serif;
+    background: #1a1a1a;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+
+  .sheet {
+    max-width: 920px;
+    margin: 0 auto;
+    background: var(--cream);
+    min-height: 100vh;
+    box-shadow: 0 0 0 1px #000, 0 30px 80px rgba(0,0,0,.45);
+    position: relative;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--black);
+  }
+  header.mast {
+    color: #fff;
+    padding: 16px 32px 18px;
+  }
+  .mast-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .live-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    color: #fff;
+    border: 1px solid #3a3a3a;
+    background: #161616;
+    padding: 6px 10px;
+    margin: 0;
+  }
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ff2a2a;
+    box-shadow: 0 0 0 0 rgba(255, 42, 42, .7);
+    animation: pulse 1.4s infinite;
+    display: inline-block;
+  }
+  @keyframes pulse {
+    70% { box-shadow: 0 0 0 7px rgba(255, 42, 42, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 42, 42, 0); }
+  }
+  #clock { color: #fff; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+  .edition {
+    font-size: 11px;
+    letter-spacing: .18em;
+    font-weight: 700;
+    color: #f2f2f2;
+  }
+  .mast-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .wordmark { min-width: 0; }
+  .kicker {
+    font-size: 12px;
+    letter-spacing: .28em;
+    font-weight: 700;
+    color: #d0121a;
+    margin: 0 0 4px;
+  }
+  .mast h1 {
+    font-family: "Bebas Neue", Oswald, sans-serif;
+    font-weight: 400;
+    font-size: clamp(64px, 10vw, 96px);
+    line-height: 1;
+    letter-spacing: .02em;
+    margin: 0;
+    padding: 0;
+    color: #f7f4ee;
+    position: relative;
+    z-index: 1;
+  }
+  .title-rule {
+    width: 72px;
+    height: 4px;
+    background: var(--red);
+    margin-top: 10px;
+  }
+  .date-badge {
+    background: var(--red);
+    color: #fff;
+    padding: 10px 14px 9px;
+    text-align: right;
+    flex: none;
+    min-width: 108px;
+  }
+  .date-badge b {
+    display: block;
+    font-family: "Bebas Neue", Oswald, sans-serif;
+    font-size: 42px;
+    font-weight: 400;
+    line-height: .8;
+    letter-spacing: .02em;
+  }
+  .date-badge span {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+  }
+  nav.topics {
+    display: flex;
+    gap: 0;
+    background: #111;
+    border-top: 1px solid #2a2a2a;
+    overflow-x: auto;
+  }
+  nav.topics button {
+    background: transparent;
+    color: #cfcfcf;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    padding: 13px 16px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  nav.topics button:hover { color: #fff; }
+  nav.topics button.active {
+    color: #fff;
+    border-bottom-color: var(--red);
+    background: #1a1a1a;
+  }
+  .ticker {
+    background: #f7f3ec;
+    color: #3c3832;
+    font-size: 12px;
+    letter-spacing: .04em;
+    display: flex;
+    gap: 22px;
+    padding: 9px 32px;
+    overflow: hidden;
+    border-bottom: 1px solid #e4dccf;
+  }
+  .ticker b { color: #111; }
+  .ticker span.up { color: #1d7a3a; font-weight: 700; }
+  .ticker span.flat { color: #6d675f; }
+
+  main { padding: 8px 0 40px; }
+
+  .item {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 8px 14px;
+    padding: 22px 36px 18px;
+    border-bottom: 1px dashed #cfc6b8;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .item:hover { background: #efe8dc; }
+  .num {
+    font-family: Oswald, "Bebas Neue", sans-serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--red);
+    line-height: 1;
+    padding-top: 2px;
+  }
+  .tag {
+    display: inline-block;
+    background: #111;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    padding: 3px 6px 2px;
+    margin-bottom: 8px;
+  }
+  .item h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -.02em;
+    font-weight: 800;
+  }
+  .dek {
+    margin: 0;
+    color: #9a938a;
+    font-size: 14.5px;
+    font-weight: 500;
+  }
+  .meta {
+    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #b0a89e;
+    font-weight: 700;
+  }
+
+  /* article */
+  .article {
+    display: none;
+    padding: 28px 36px 50px;
+  }
+  .article.show { display: block; }
+  .back {
+    background: none;
+    border: 0;
+    color: var(--red);
+    font-weight: 800;
+    letter-spacing: .08em;
+    font-size: 12px;
+    padding: 0 0 18px;
+    text-transform: uppercase;
+  }
+  .article h2 {
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.12;
+    margin: 10px 0 12px;
+    letter-spacing: -.03em;
+  }
+  .byline {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 18px;
+    font-weight: 600;
+  }
+  .lead {
+    font-size: 18px;
+    line-height: 1.45;
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+  .article p {
+    font-size: 16.5px;
+    line-height: 1.65;
+    margin: 0 0 14px;
+  }
+  .article h3 {
+    font-size: 18px;
+    margin: 22px 0 8px;
+  }
+  .pull {
+    border-left: 4px solid var(--red);
+    margin: 18px 0;
+    padding: 4px 0 4px 14px;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.35;
+  }
+  .related {
+    margin-top: 28px;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  .related button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px dashed var(--line);
+    padding: 12px 0;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .related button:hover { color: var(--red); }
+
+  .list-wrap.hidden { display: none; }
+
+  footer.foot {
+    background: var(--black);
+    color: #d7d7d7;
+    padding: 54px 36px 22px;
+    position: relative;
+  }
+  .stamp {
+    position: absolute;
+    left: 22px;
+    top: -46px;
+    width: 118px;
+    height: auto;
+    transform: rotate(-8deg);
+    filter: drop-shadow(0 8px 10px rgba(0,0,0,.28));
+    z-index: 2;
+    pointer-events: none;
+  }
+  .foot-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: flex-end;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .foot-brand {
+    margin-left: 132px;
+  }
+  .foot-brand strong {
+    display: block;
+    color: #fff;
+    font-size: 18px;
+    letter-spacing: .04em;
+  }
+  .foot-brand p {
+    margin: 4px 0 0;
+    color: #9a9a9a;
+    font-size: 13px;
+  }
+  .handle {
+    font-weight: 800;
+    font-size: 22px;
+    color: #fff;
+    text-align: right;
+    text-decoration: none;
+  }
+  .handle i {
+    display: block;
+    height: 4px;
+    width: 92px;
+    background: var(--red);
+    margin-left: auto;
+    margin-top: 6px;
+  }
+  .foot-label {
+    font-size: 11px;
+    letter-spacing: .16em;
+    font-weight: 800;
+    color: #888;
+    margin: 0 0 12px;
+  }
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+  .projects a {
+    display: block;
+    border: 1px solid #2c2c2c;
+    background: #141414;
+    color: #f2f2f2;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+  }
+  .projects a span {
+    display: block;
+    margin-top: 2px;
+    color: #8d8d8d;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .projects a:hover {
+    border-color: var(--red);
+    color: #fff;
+  }
+  .projects a.all {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+  .projects a.all span { color: rgba(255,255,255,.8); }
+  .sources {
+    font-size: 12px;
+    color: #9a9a9a;
+    line-height: 1.5;
+  }
+  .empty {
+    padding: 40px 36px;
+    color: var(--muted);
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    header.mast, .item, .article, footer.foot, .ticker { padding-left: 18px; padding-right: 18px; }
+    .item { grid-template-columns: 46px 1fr; padding-top: 16px; }
+    .item h2 { font-size: 18px; }
+    .mast h1 { font-size: 64px; }
+    .date-badge b { font-size: 34px; }
+    .edition { letter-spacing: .08em; font-size: 10px; }
+    .stamp { width: 96px; left: 12px; top: -36px; }
+    .foot-brand { margin-left: 0; margin-top: 28px; }
+    .foot-top { flex-direction: column; align-items: flex-start; }
+    .handle { text-align: left; }
+    .handle i { margin-left: 0; }
+    .projects { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="topbar">
+    <header class="mast">
+      <div class="mast-meta">
+        <div class="live-row"><span class="live-dot"></span> CANLI · <span id="clock">15:31</span></div>
+        <div class="edition">PARS STUDIO · ÖĞLE BASKISI</div>
+      </div>
+      <div class="mast-row">
+        <div class="wordmark">
+          <h1 id="pageTitle">BÜLTEN</h1>
+          <div class="title-rule"></div>
+        </div>
+        <div class="date-badge"><b id="dayNum">06</b><span id="dayLabel">EKİM 2026</span></div>
+      </div>
+    </header>
+    <nav class="topics" id="nav">
+      <button data-filter="all" class="active">Anasayfa</button>
+      <button data-filter="mersin">Mersin</button>
+      <button data-filter="malatya">Malatya</button>
+      <button data-filter="fenerbahce">Fenerbahçe</button>
+      <button data-filter="yesilyurt">Malatya Yeşilyurtspor</button>
+      <button data-filter="yeniparti">Yeni Parti</button>
+      <button data-filter="chp">CHP</button>
+    </nav>
+    <div class="ticker">
+      <span>DOLAR <b>49,18</b> <span class="up">+%0,08</span></span>
+      <span>EURO <b>55,16</b></span>
+      <span>BIST 100 <span class="flat">yatay</span></span>
+      <span>GRAM ALTIN <b>6.535</b></span>
+    </div>
+  </div>
+
+  <main>
+    <div class="list-wrap" id="list"></div>
+    <div class="empty" id="empty">Bu başlıkta kayıt yok.</div>
+    <article class="article" id="article"></article>
+  </main>
+
+  <footer class="foot">
+    <img class="stamp" src="pars-stamp.png" alt="Pars Studio">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <strong>BÜLTEN</strong>
+        <p>Pars Studio masa haberi. Altı başlık, canlı akış.</p>
+      </div>
+      <a class="handle" href="https://x.com/erdmas" target="_blank" rel="noopener">@erdmas<i></i></a>
+    </div>
+    <p class="foot-label">DİĞER PROJELER</p>
+    <div class="projects">
+      <a href="https://ermetasarim.github.io/fenerbahce/" target="_blank" rel="noopener">Fenerbahçe<span>Skor ve fikstür</span></a>
+      <a href="https://ermetasarim.github.io/malatyaspor/" target="_blank" rel="noopener">Yeşilyurtspor<span>Canlı skor</span></a>
+      <a href="https://ermetasarim.github.io/csgopars/" target="_blank" rel="noopener">CSGOPARS<span>CS2 profil</span></a>
+      <a href="https://ermetasarim.github.io/sonnobet" target="_blank" rel="noopener">Son Nöbet<span>Kriz simülasyonu</span></a>
+      <a href="https://ermetasarim.github.io/hava/" target="_blank" rel="noopener">Hava Durumu<span>Anlık tahmin</span></a>
+      <a href="https://ermetasarim.github.io/namaz/" target="_blank" rel="noopener">Namaz Vakitleri<span>Günlük vakit</span></a>
+      <a class="all" href="https://ermetasarim.github.io/projeler/" target="_blank" rel="noopener">Tüm projeler<span>Portföy</span></a>
+    </div>
+    <div class="sources">Kaynaklar: AA, BirGün, Euronews, Haberler, Bu Sabah Malatya, Meteoroloji, Türkiye Gazetesi, Aspor, CNN Türk, Habertürk · Son yenileme <span id="updated">15:19</span></div>
+  </footer>
+</div>
+
+<script>
+const stories = [
+  {
+    id: "mersin-tutuklama",
+    cat: "mersin",
+    tag: "YARGI",
+    title: "Mersin soruşturması: Vahap Seçer ve 2 ilçe başkanı tutuklandı",
+    dek: "Yenişehir ve Mezitli başkanları da tutuklananlar arasında",
+    meta: "AA · DHA · 6 Ekim",
+    lead: "Mersin’de belediyelere yönelik yolsuzluk soruşturmasında Büyükşehir Belediye Başkanı Vahap Seçer ile Yenişehir ve Mezitli belediye başkanları tutuklandı.",
+    body: [
+      "Mersin Cumhuriyet Başsavcılığı’nın ihale ve doğrudan temin işlemlerine ilişkin yürüttüğü soruşturma kapsamında 1 Ekim’de eş zamanlı operasyon düzenlenmiş, ilk etapta 59 kişi gözaltına alınmıştı. Adliyeye sevk edilen şüphelilerin sorgusu 6 Ekim’de tamamlandı.",
+      "Sulh ceza hakimliği, Büyükşehir Belediye Başkanı Vahap Seçer, Yenişehir Belediye Başkanı Abdullah Özyiğit ve Mezitli Belediye Başkanı Ahmet Serkan Tuncer’in tutuklanmasına karar verdi. BirGün’ün aktardığına göre aralarında daire başkanları ve başkan yardımcılarının da bulunduğu toplam 34 kişi tutuklandı; 26 kişi adli kontrolle serbest bırakıldı. Euronews ise tutuklama sayısını farklı bir dökümle 17 olarak verdi; sayılar kaynaklara göre ayrışıyor.",
+      "Soruşturma dosyasında Büyükşehir Belediyesi’nin 13 doğrudan temin ve ihale dosyasında usulsüzlük tespit edildiği, mal ve hizmet alımlarında Seçer’in olurunun bulunduğu ileri sürüldü.",
+      "Mezitli Belediye Başkanı Tuncer hakkında ayrıca, husumetlisi olduğu kişilerin iş yerlerine silahlı saldırı düzenlettirdiği iddiasıyla “silahlı suç örgütü yöneticiliği” kapsamında işlem yapıldığı bildirildi. İddia edilen hedefler arasında Yeni Parti Mersin İl Başkanlığı binası da anıldı. Bu kısım henüz mahkeme kararıyla sabitlenmiş bir hüküm değil."
+    ]
+  },
+  {
+    id: "fb-ayari",
+    cat: "fenerbahce",
+    tag: "FENERBAHÇE",
+    title: "Fenerbahçe’den Premier Lig çıkarması: Ayari ve Alcaraz masada",
+    dek: "Ocak planında ilk isim Brighton’lı Yasin Ayari; piyasa değeri 40 milyon euro",
+    meta: "Aspor · 6 Ekim",
+    lead: "Sarı-lacivertliler, sezonun ilk altı haftasında orta sahada yaşanan aksamaların ardından ocak için İngiltere’de iki ismi yokluyor.",
+    body: [
+      "Aspor’un haberine göre Fenerbahçe, transfer çalışmalarını hızlandırdı. Orta saha listesinin ilk sırasında Brighton forması giyen 22 yaşındaki Yasin Ayari var. Kulübüyle sözleşmesi 2027’de bitecek olan Tunus asıllı İsveçli oyuncunun piyasa değeri 40 milyon euro.",
+      "Ayari’nin yaz döneminde Galatasaray’ın da listesinde olduğu, Brighton ile anlaşma sağlanamadığı kaydedildi. Fenerbahçe’nin transferde Brighton’da oynayan Ferdi Kadıoğlu’ndan destek isteyebileceği aktarıldı.",
+      "Ayari hattında sonuç alınamazsa kulübün Everton’ın Arjantinli orta sahası Carlos Alcaraz’a yöneleceği ileri sürüldü. Plan, 10+4 yabancı kuralı gözetilerek genç profillere öncelik veriyor.",
+      "Kadronun mevcut hali: teknik direktör İsmail Kartal. Hazırlık kampı dökümlerinde Vedat Muriqi ve Amara Diouf gibi yeni isimler de anıldı; Diego Carlos’un sağlık kontrolüne katılamadığı kulüpçe duyurulmuştu."
+    ]
+  },
+  {
+    id: "yesilyurt-9-1",
+    cat: "yesilyurt",
+    tag: "SPOR",
+    title: "Yeşilyurtspor’dan 9-1: 5’te 5, grup lideri",
+    dek: "Yozgat deplasmanındaki tarihi skor puanı 15’e çıkardı",
+    meta: "Bu Sabah Malatya · 6 Ekim",
+    lead: "Nesine 3. Lig 3. Grup’ta Malatya Yeşilyurtspor, Yozgat karşısında 9-1 kazandı ve namağlup liderliğini pekiştirdi.",
+    body: [
+      "Bölgesel amatör ve 3. Lig kulvarında Malatya’yı temsil eden Yeşilyurtspor, oynadığı 5 maçın tamamını kazanarak 15 puana ulaştı. Son prova, Yozgat Belediyesi Bozokspor deplasmanında 9-1’lik skor oldu.",
+      "Bir önceki hafta, 27 Eylül’de evinde Adanaspor’u 8-0 yenmişti. O maçta Tayyib Kanarya ilk yarıda hat-trick yapmış; gollere Aykut Sarıdoğan, Yiğit Ulaş, Enes Nalbantoğlu, Berkay Kumlu ve Fadıl Kocaoğlu da katkı vermişti. Dört maçta 13 gol atıp kalesinde 1 gol görmüşlerdi.",
+      "Sezon açılışı Diyarbekirspor deplasmanında 1-0, ardından Kırıkkale FK 3-1 ve Osmaniyespor deplasmanı 1-0 şeklinde gelmişti.",
+      "Bu Sabah Malatya’da konuşan Şenol Karaduman ve Aziz Yiğit, farklı galibiyetin şehre moral verdiğini, asıl sınavın ise Bitlis deplasmanı olacağını söyledi. Teknik sorumlu Recep Asıl."
+    ]
+  },
+  {
+    id: "yeni-parti-uye",
+    cat: "yeniparti",
+    tag: "SİYASET",
+    title: "Özel: YENİ Parti 753 bin üyeye ulaştı, il seçimleri 18 Ekim’de",
+    dek: "820 ilçede ön seçim bitti; katılım oranı yüzde 62,5",
+    meta: "Haberler · İHA · 6 Ekim",
+    lead: "YENİ Parti Genel Başkanı Özgür Özel, üye sayısının bu sabah 753 bine ulaştığını ve 18 Ekim’de 81 ilde il başkanlığı seçimi yapılacağını açıkladı.",
+    body: [
+      "Özel, partisinin TBMM grup toplantısında konuştu. Resmi ilçe kongrelerinin bu hafta sonu bittiğini, 820 ilçede sandığa gidildiğini söyledi. Adayların yaklaşık yarısında yarış olduğunu, tek adaylı ilçelerle birlikte katılımın yüzde 62,5’e ulaştığını aktardı.",
+      "“Bugün itibarıyla YENİ Parti’nin üye sayısı bu sabah 753 bine ulaştı. Üye sayımız hızla artmaya devam ediyor. 18 Ekim günü üyelerimizin tamamı il başkanlığı için oy kullanacak.”",
+      "Yaz boyunca grubun 61 ili dolaştığını, ekim içinde bu sayının 81’e tamamlanacağını belirten Özel, sandık gelene kadar Anadolu’da sahada olacaklarını söyledi. Meclis ve komisyon çalışmalarının da süreceğini vurguladı.",
+      "Mersin dosyasında, Mezitli soruşturması kapsamında Yeni Parti il binasına yönelik silahlı saldırı iddiası da gündeme gelmişti. Parti bu iddiaya ilişkin ayrı bir açıklamayı saat 15.00’e kadar kamuoyuyla paylaşmadı."
+    ]
+  },
+  {
+    id: "chp-grup",
+    cat: "chp",
+    tag: "SİYASET",
+    title: "Kılıçdaroğlu grupta: “Hiç kimse yargılanamaz değildir”",
+    dek: "Yeni yasama yılının ilk grup toplantısında tutuklamalara değindi",
+    meta: "Habertürk · 6 Ekim",
+    lead: "CHP Genel Başkanı Kemal Kılıçdaroğlu, Meclis’teki grup toplantısında gözaltı ve tutuklamaları “kimse yargılanamaz değildir” diyerek çerçeveledi.",
+    body: [
+      "Kılıçdaroğlu, yeni yasama yılının ilk grup konuşmasında “Türkiye’yi yeniden inşa edeceğiz, ahlaki temellerde inşa edeceğiz. Kişinin kimliğini asla siyasete malzeme etmeyeceğiz” dedi.",
+      "Kırsalda çalışan kadın ve gençlerin sigorta primlerinin devletçe ödenmesini önerdi. Gözaltı ve tutuklamalara ilişkin ise “Hiç kimse yargılanamaz değildir. Benim de şu an dokunulmazlığım yok. Şikâyet olduğunda hâkimin huzurunda kendimi savunurum” ifadesini kullandı.",
+      "Mersin’de aynı gün açıklanan Vahap Seçer, Abdullah Özyiğit ve Ahmet Serkan Tuncer tutuklamaları, CHP’li belediyelere yönelik operasyon dalgasının son halkası olarak okunuyor. Kılıçdaroğlu konuşmasında isim vermeden yargı sürecinin işlemesi gerektiğini vurguladı.",
+      "Saha takvimi de netleşti: 10 Ekim’de Şırnak’ın Cizre ilçesinde kadınlarla yeryüzü sofrasında buluşacak. Ekim ortasında Gaziantep’te üye katılım töreni, STK ve iş dünyası temasları ile “Milli Bilinç – Güçlü Türkiye” etkinliğinin üçüncüsü var."
+    ]
+  },
+  {
+    id: "fb-greenwood",
+    cat: "fenerbahce",
+    tag: "FENERBAHÇE",
+    title: "Kartal’dan Greenwood’a uyarı: “Sinirlerine hakim ol”",
+    dek: "Turan Tovuz maçında kırmızı kart gören forvete disiplin çizgisi",
+    meta: "CNN Türk · 6 Ekim",
+    lead: "İsmail Kartal, milli arada Turan Tovuz ile oynanan hazırlıkta kırmızı kart gören Mason Greenwood’u Azerbaycan dönüşünde özel olarak uyardı.",
+    body: [
+      "İngiliz forvet, rakibine yaptığı müdahalenin ardından oyun dışı kalmış ve takımını eksik bırakmıştı. Hareketin ligde cezaya dönüşme ihtimali de masada.",
+      "CNN Türk’ün aktardığına göre Kartal görüşmede şunları söyledi: “Takım için çok değerlisin. Kritik maçlar oynuyoruz. Sinirlerine hakim ol, sakin kal. Bizi yalnız bırakmanı istemiyorum.”",
+      "Teknik direktör, sezonun kritik bölümüne girilirken Greenwood’u hem performans hem saha içi davranış açısından yakından izleyeceğini belirtti.",
+      "Aynı gün transfer masasındaki Premier Lig yoklaması da orta sahayı güçlendirme niyetini gösteriyor: Ayari öncelikli, olmazsa Alcaraz."
+    ]
+  },
+  {
+    id: "yesilyurt-bitlis",
+    cat: "yesilyurt",
+    tag: "SPOR",
+    title: "Yeşilyurtspor’da sıradaki sınav: Bitlis deplasmanı",
+    dek: "5 maç 5 galibiyetin ardından liderlik koltuğu korunacak mı?",
+    meta: "Bu Sabah Malatya · 6 Ekim",
+    lead: "9-1’lik Yozgat galibiyeti sevinci kısa sürdü; Malatya kamuoyu bir sonraki durağı Bitlis olarak işaret ediyor.",
+    body: [
+      "Futbol Analiz programında konuşan isimler, beş maçlık seri için “takımdaşlık ve lige alışma adına önemliydi” dedi. Asıl kalitenin Bitlis deplasmanında görüleceğini vurguladılar.",
+      "“Bitlis karşısında alacağımız bir galibiyet, hedefimizden sapmayacağımızı gösterecek. Hem rakiplerimize gözdağı veririz hem de bu kadronun bu ligin üzerinde bir yapıda olduğunu kanıtlarız.”",
+      "Yeşilyurtspor, Malatya futbolunun profesyonel liglerdeki temsilcisi konumunda. Yeni Malatya Stadyumu iç saha maçlarına ev sahipliği yapıyor. Ocak ayındaki bir 3. Lig kaydında Suvermez Kapadokya ile 1-1 berabere kalmışlardı; bu sezonun açılış ritmi ise bambaşka.",
+      "Destek tarafında iki taraftar derneğinin antrenmanlarda takımı yalnız bırakmadığı da not edildi."
+    ]
+  },
+  {
+    id: "chp-cizre",
+    cat: "chp",
+    tag: "GÜNDEM",
+    title: "Kılıçdaroğlu 10 Ekim’de Cizre’de yeryüzü sofrasında",
+    dek: "Ardından Gaziantep: üye töreni ve Milli Bilinç zirvesi",
+    meta: "Haberler · 6 Ekim",
+    lead: "CHP liderinin ekim saha programı Şırnak ve Gaziantep hattında toplandı.",
+    body: [
+      "Kılıçdaroğlu, 10 Ekim’de Şırnak’ın Cizre ilçesinde kadınlarla yeryüzü sofrasında buluşacak.",
+      "Programın ardından ekim ortasında Gaziantep’te partinin üye katılım törenine katılacak. Kentteki sivil toplum kuruluşları, iş dünyası ve oda temsilcileriyle de bir araya gelecek.",
+      "Daha önce İzmir ve Ankara’da yapılan “Milli Bilinç – Güçlü Türkiye” etkinliğinin üçüncüsü Gaziantep’te düzenlenecek.",
+      "Aynı gün Meclis’te CHP, MHP ve DEM Parti grup toplantıları ile TCMB Başkanı Fatih Karahan’ın Plan ve Bütçe Komisyonu sunumu da gündemdeydi."
+    ]
+  },
+  {
+    id: "mersin-yp",
+    cat: "mersin",
+    tag: "MERSİN",
+    title: "Mezitli dosyasında Yeni Parti il binası iddiası",
+    dek: "Silahlı saldırı örgütü soruşturması Mersin siyasetine sıçradı",
+    meta: "TV5 · 6 Ekim",
+    lead: "Tuncer hakkındaki ikinci hat, belediye ihalelerinin ötesinde silahlı saldırı iddialarına dayanıyor.",
+    body: [
+      "TV5’in aktardığına göre Mezitli Belediye Başkanı Ahmet Serkan Tuncer hakkında, husumetlisi olduğu kişilerin iş yerlerine silahlı saldırı düzenlettirdiği gerekçesiyle soruşturma yürütülüyor.",
+      "İddia edilen hedefler arasında Yeni Parti Mersin İl Başkanlığı binası ve bir medya grubunun iş yeri de sayılıyor. Savcılık bu başlığı “silahlı suç örgütü yöneticiliği” kapsamında değerlendiriyor.",
+      "Bu iddia, aynı operasyonda tutuklanan Vahap Seçer ve Abdullah Özyiğit dosyasındaki ihale usulsüzlüğü iddialarından ayrı bir kulvar. Üç başkan da 6 Ekim itibarıyla tutuklu.",
+      "Yeni Parti cephesinde Özel’in gün içindeki konuşması üye sayısı ve 18 Ekim il seçimlerine odaklandı; Mersin binasına ilişkin iddia grup konuşmasının merkezinde değildi."
+    ]
+  },
+  {
+    id: "malatya-yagis",
+    cat: "malatya",
+    tag: "MALATYA",
+    title: "Malatya’nın güneyine sel ve dolu uyarısı",
+    dek: "Öğleden sonra kuvvetli sağanak; Elazığ da aynı hatta",
+    meta: "Meteoroloji · İçişleri · 6 Ekim",
+    lead: "İçişleri Bakanlığı, 6 Ekim’de Malatya’nın güney kesimleri ile Elazığ çevresinde yerel kuvvetli sağanak beklendiğini duyurdu.",
+    body: [
+      "Meteoroloji Genel Müdürlüğü verisine dayanan uyarıda yağışların öğle saatlerinde Malatya’nın güneyinde ve Elazığ çevresinde kuvvetli olacağı belirtildi. Aynı hatta Bingöl, Muş, Bitlis, Tunceli ve Hakkari ile Siirt ve Şırnak’ın doğusu, Diyarbakır, Batman ve Adıyaman’ın kuzeyi de var.",
+      "Bakanlık vatandaşları ani sel, su baskını, yıldırım, yerel dolu, kuvvetli rüzgâr ve ulaşımda aksamaya karşı tedbirli olmaya çağırdı. Yetkililer özellikle güney ilçelerde güncel uyarıların takip edilmesini istedi.",
+      "Hatay kıyıları ile Osmaniye’nin güney ve doğusunda da aralıklı kuvvetli sağanak öngörülüyor. Öğleden sonra Kars, Ağrı ve Iğdır için ayrı bir kuvvetli yağış notu düşüldü.",
+      "Malatya’da 6 Şubat sonrası altyapı hâlâ tamamlanırken kısa süreli su baskını riski, dere yatakları ve yeni iskân alanlarındaki drenaj için ayrıca izleniyor."
+    ]
+  },
+  {
+    id: "malatya-insaat",
+    cat: "malatya",
+    tag: "MALATYA",
+    title: "Sami Er: Kentte yapılaşmanın yüzde 95’i tamam",
+    dek: "103 bin 230 bağımsız bölümün inşası sürüyor; 10. kurada 79 bin 660 hak",
+    meta: "Haberler · Diriliş Postası · 6 Ekim",
+    lead: "Büyükşehir Belediye Başkanı Sami Er, 6 Şubat depremlerinin ardından Malatya’da yapılaşmanın yaklaşık yüzde 95’inin bittiğini söyledi.",
+    body: [
+      "Yeniden yapılanma üç kolda yürüyor: il çeperlerinde 49 bin 166, rezerv alanlarda 38 bin 497 bağımsız bölüm. Kırsalda 361 mahalledeki 1.236 lokasyonda 15 bin 567 konutun inşası sürüyor.",
+      "Toplam 90 bin 52 konut ve 13 bin 178 ticari bölüm, yani 103 bin 230 bağımsız bölüm için çalışma var. 10. kura kapsamında 79 bin 660 bağımsız bölümün kurası çekildi.",
+      "Kent merkezinde yaklaşık 400 hektar rezerv alan ilan edildi. Amaç, hak sahiplerinin kendi mahallelerinde, komşu ve akraba çevresiyle kalması. Yaklaşık 9 bin iş yerinin bulunduğu Çarşı yeniden kuruluyor; Saray Mahallesi’nde yeni bir merkez açıldı.",
+      "Er, “Yıkılan bir şehrin yeniden ayağa kalktığının en büyük örneği Malatya’dır” dedi. Türkiye Gazetesi’ne verdiği demeçte iki ay içinde depremle ilgili tek iz kalmayacağını, konteynerlerin kaldırılacağını ve başka illere giden hemşehrilerin geri çağrıldığını anlattı. Su kesintisi için 70 milyon euroluk yedek hat da bu anlatının içinde."
+    ]
+  },
+  {
+    id: "malatya-carsi",
+    cat: "malatya",
+    tag: "KENT",
+    title: "Tek çarşıdan çok merkeze: Malatya’nın yeni omurgası",
+    dek: "Eski çarşı çökünce esnaf dağıldı; rezerv alan ve Saray hattı devrede",
+    meta: "Türkiye Gazetesi · 6 Ekim",
+    lead: "Deprem öncesi tek merkeze sıkışan Malatya, yeniden kuruluşta birden fazla odağa yayılıyor.",
+    body: [
+      "Sami Er’in sahadan aktardığı tablo şöyle: eski çarşı hareketli ama karışıktı, yollar dardı, trafik akmazdı, yer yer barakalar vardı. 6 Şubat’ta kent Hatay’dan sonra en ağır hasarı aldı; can kaybı görece düşük kaldığı için kamuoyunda bir süre geri planda durdu.",
+      "Tek çarşı çökünce esnaf da dağıldı. Yeni planda yaklaşık 9 bin iş yerinin bulunduğu çarşı ayağa kaldırılırken Saray Mahallesi ikinci bir merkez olarak kuruluyor. 400 hektarlık rezerv alan, mahalle dokusunu korumayı hedefliyor.",
+      "Altyapı tarafında deprem günü kesilen ve bir hafta çamurlu akan su için 70 milyon euroluk finansman bulunduğu belirtiliyor. Başkan, “İki ay içinde depremle ilgili tek iz kalmayacak, konteynerler de kalkacak” dedi.",
+      "Aynı günün spor notu da kente ait: Yeşilyurtspor Yozgat deplasmanını 9-1 kazandı, 5 maçta 5 galibiyet ve 15 puanla grup lideri."
+    ]
+  }
+];
+
+const listEl = document.getElementById("list");
+const articleEl = document.getElementById("article");
+const titleEl = document.getElementById("pageTitle");
+const emptyEl = document.getElementById("empty");
+let filter = "all";
+const ORDER = ["mersin", "malatya", "fenerbahce", "yesilyurt", "yeniparti", "chp"];
+const FEEDS = [
+  { cat: "mersin", tag: "MERSİN", q: "Mersin" },
+  { cat: "malatya", tag: "MALATYA", q: "Malatya -Yeşilyurtspor" },
+  { cat: "fenerbahce", tag: "FENERBAHÇE", q: "Fenerbahçe" },
+  { cat: "yesilyurt", tag: "YEŞİLYURT", q: "\"Malatya Yeşilyurtspor\" OR Yeşilyurtspor" },
+  { cat: "yeniparti", tag: "YENİ PARTİ", q: "\"Yeni Parti\" Özgür" },
+  { cat: "chp", tag: "CHP", q: "CHP Kılıçdaroğlu" }
+];
+
+function rank(s) {
+  const i = ORDER.indexOf(s.cat);
+  return i === -1 ? 99 : i;
+}
+function sortStories(list) {
+  return list.slice().sort((a, b) => rank(a) - rank(b) || (b.live - a.live) || (b.added || 0) - (a.added || 0));
+}
+
+function renderList() {
+  articleEl.classList.remove("show");
+  articleEl.innerHTML = "";
+  listEl.classList.remove("hidden");
+  const data = sortStories(stories.filter(s => filter === "all" || s.cat === filter || (filter === "malatya" && s.cat === "yesilyurt")));
+  emptyEl.style.display = data.length ? "none" : "block";
+  listEl.innerHTML = data.map((s, i) => `
+    <article class="item" data-id="${s.id}">
+      <div class="num">${String(i + 1).padStart(2, "0")}</div>
+      <div>
+        <span class="tag">${s.tag}</span>
+        <h2>${s.title}</h2>
+        <p class="dek">${s.dek}</p>
+        <div class="meta">${s.meta}${s.live ? " · CANLI AKIŞ" : ""}</div>
+      </div>
+    </article>
+  `).join("");
+  titleEl.textContent = filter === "all" ? "BÜLTEN" : ({
+    mersin: "MERSİN",
+    malatya: "MALATYA",
+    fenerbahce: "FENERBAHÇE",
+    yesilyurt: "YEŞİLYURT",
+    yeniparti: "YENİ PARTİ",
+    chp: "CHP"
+  }[filter]);
+}
+
+function openStory(id) {
+  const s = stories.find(x => x.id === id);
+  if (!s) return;
+  listEl.classList.add("hidden");
+  emptyEl.style.display = "none";
+  const related = stories.filter(x => x.id !== id && (x.cat === s.cat || (s.cat === "yesilyurt" && x.cat === "malatya") || (s.cat === "malatya" && x.cat === "yesilyurt") || filter === "all")).slice(0, 3);
+  articleEl.innerHTML = `
+    <button class="back" id="backBtn">← Anasayfaya dön</button>
+    <span class="tag">${s.tag}</span>
+    <h2>${s.title}</h2>
+    <div class="byline">${s.meta} · Pars Studio masası</div>
+    <p class="lead">${s.lead}</p>
+    ${s.body.map((p, i) => i === 1 ? `<div class="pull">${p}</div>` : `<p>${p}</p>`).join("")}
+    <div class="related">
+      <div class="meta" style="margin-bottom:8px">İlgili başlıklar</div>
+      ${related.map(r => `<button data-id="${r.id}">${r.title}</button>`).join("")}
+    </div>
+  `;
+  articleEl.classList.add("show");
+  titleEl.textContent = "HABER";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  document.getElementById("backBtn").onclick = () => { renderList(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  articleEl.querySelectorAll(".related button").forEach(btn => {
+    btn.onclick = () => openStory(btn.dataset.id);
+  });
+}
+
+document.getElementById("nav").addEventListener("click", e => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+  filter = btn.dataset.filter;
+  document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("active", b === btn));
+  renderList();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+listEl.addEventListener("click", e => {
+  const item = e.target.closest(".item");
+  if (!item) return;
+  openStory(item.dataset.id);
+});
+
+function tick() {
+  const now = new Date();
+  const text = new Intl.DateTimeFormat("tr-TR", {
+    timeZone: "Europe/Istanbul",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  }).format(now);
+  const clock = document.getElementById("clock");
+  const updated = document.getElementById("updated");
+  if (clock) clock.textContent = text;
+  if (updated && !updated.dataset.feed) updated.textContent = text.slice(0, 5);
+  const parts = new Intl.DateTimeFormat("tr-TR", {
+    timeZone: "Europe/Istanbul",
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  }).formatToParts(now);
+  const pick = type => (parts.find(p => p.type === type) || {}).value || "";
+  const day = document.getElementById("dayNum");
+  const label = document.getElementById("dayLabel");
+  if (day) day.textContent = pick("day");
+  if (label) label.textContent = (pick("month") + " " + pick("year")).toLocaleUpperCase("tr");
+  document.title = "Bülten · " + pick("day") + " " + pick("month") + " " + pick("year");
+}
+tick();
+setInterval(tick, 1000);
+
+function strip(html) {
+  const d = document.createElement("div");
+  d.innerHTML = html || "";
+  return (d.textContent || "").replace(/\s+/g, " ").trim();
+}
+function known(title) {
+  const key = title.toLocaleLowerCase("tr");
+  return stories.some(s => s.title.toLocaleLowerCase("tr") === key);
+}
+async function pullFeeds() {
+  const status = document.getElementById("updated");
+  let added = 0;
+  for (const feed of FEEDS) {
+    const rss = "https://news.google.com/rss/search?q=" + encodeURIComponent(feed.q + " when:1d") + "&hl=tr&gl=TR&ceid=TR:tr";
+    try {
+      const res = await fetch("https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(rss));
+      if (!res.ok) continue;
+      const data = await res.json();
+      (data.items || []).slice(0, 3).forEach(item => {
+        const title = strip(item.title).replace(/ - .+$/, "");
+        if (!title || known(title)) return;
+        stories.push({
+          id: "live-" + Math.random().toString(36).slice(2, 9),
+          cat: feed.cat,
+          tag: feed.tag,
+          title,
+          dek: strip(item.description).slice(0, 140) || "Ajans akışından düşen yeni başlık",
+          meta: (item.author || "Ajans") + " · " + new Date(item.pubDate || Date.now()).toLocaleString("tr-TR", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" }),
+          lead: title,
+          body: [
+            strip(item.description) || "Başlık ajans akışından otomatik eklendi.",
+            item.link ? "Kaynak bağlantısı: " + item.link : "Ayrıntı için kaynağın kendi sayfasına bakın.",
+            "Bu kayıt Pars Studio canlı akışından geldi. Masa haberlerinin yerine geçmez; teyit için kaynak satırına bakın."
+          ],
+          live: 1,
+          added: Date.now()
+        });
+        added += 1;
+      });
+    } catch (err) {}
+  }
+  if (added && !articleEl.classList.contains("show")) renderList();
+  if (status) {
+    status.dataset.feed = "1";
+    status.textContent = new Intl.DateTimeFormat("tr-TR", { timeZone: "Europe/Istanbul", hour: "2-digit", minute: "2-digit" }).format(new Date()) + (added ? " · +" + added + " yeni" : " · akış güncel");
+  }
+  try {
+    localStorage.setItem("bulten-live", JSON.stringify(stories.filter(s => s.live).slice(-40)));
+  } catch (err) {}
+}
+try {
+  JSON.parse(localStorage.getItem("bulten-live") || "[]").forEach(s => {
+    if (s && s.title && !known(s.title)) stories.push(s);
+  });
+} catch (err) {}
+pullFeeds();
+setInterval(pullFeeds, 2 * 60 * 1000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) pullFeeds(); });
+
+renderList();
+</script>
+</body>
+</html>
